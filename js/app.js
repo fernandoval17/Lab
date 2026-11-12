@@ -303,7 +303,7 @@
   }
 
   // ───────── Botón para ir al inicio / al final ─────────
-  var flecha = $("#flecha"), tipFlecha = $("#flechaTip"), haciaArriba = null, avisoFlecha;
+  var flecha = $("#flecha"), haciaArriba = null;
   function actualizarFlecha() {
     var max = document.documentElement.scrollHeight - innerHeight;
     flecha.hidden = max < 200;
@@ -313,11 +313,6 @@
     var texto = arriba ? "Ir al inicio" : "Ir al final";
     flecha.classList.toggle("arriba", arriba);
     flecha.setAttribute("aria-label", texto + " de la página");
-    tipFlecha.textContent = texto;
-    // Aviso breve cada vez que cambia la dirección (útil en celular, sin hover).
-    flecha.classList.add("aviso");
-    clearTimeout(avisoFlecha);
-    avisoFlecha = setTimeout(function () { flecha.classList.remove("aviso"); }, 1800);
   }
   var pendienteFlecha = false;
   window.addEventListener("scroll", function () {

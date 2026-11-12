@@ -138,8 +138,6 @@ button { font: inherit; cursor: pointer; }
 .flecha[hidden] { display: none; }
 .flecha svg { transition: transform .25s; }
 .flecha.arriba svg { transform: rotate(180deg); }
-.flecha-tip { position: absolute; right: calc(100% + 10px); top: 50%; transform: translateY(-50%); white-space: nowrap; background: var(--tinta); color: #fff; font-size: .85rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; opacity: 0; pointer-events: none; transition: opacity .2s; }
-.flecha:hover .flecha-tip, .flecha:focus-visible .flecha-tip, .flecha.aviso .flecha-tip { opacity: 1; }
 .flotante[hidden], .barra-lista[hidden] { display: none; }
 .barra-lista { display: none; }
 
