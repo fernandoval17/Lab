@@ -76,18 +76,23 @@
       $("#flotante").hidden = false;
     }
 
-    var acciones = "<p>¿Tienes dudas sobre un estudio o su preparación? Con gusto te orientamos.</p>";
-    if (N.whatsapp) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera información sobre sus estudios.") + '">Escribir por WhatsApp</a>';
-    if (N.whatsapp) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.") + '">Agendar toma a domicilio</a>';
-    if (N.telefono) acciones += '<a class="boton boton-claro" href="tel:' + esc(N.telefono.replace(/[^\d+]/g, "")) + '">Llamar</a>';
-    if (N.correo) acciones += '<a class="boton boton-claro" href="mailto:' + esc(N.correo) + '">Enviar correo</a>';
+    // Panel de ayuda (portada)
+    var ayuda = "";
+    if (N.whatsapp) ayuda += '<a class="boton boton-primario" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera información sobre sus estudios.") + '">Escribir por WhatsApp</a>';
+    if (N.whatsapp) ayuda += '<a class="boton" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.") + '">Agendar toma a domicilio</a>';
+    if (N.telefono) ayuda += '<a class="boton" href="tel:' + esc(N.telefono.replace(/[^\d+]/g, "")) + '">Llamar</a>';
+    $("#ayudaAcciones").innerHTML = ayuda;
+    $("#ayuda").hidden = !ayuda;
+
+    // Sucursal (final de la página): cómo llegar y redes
+    var acciones = "";
     if (N.mapaUrl) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + esc(N.mapaUrl) + '">Cómo llegar</a>';
     var redes = [["facebook", "Facebook"], ["instagram", "Instagram"]].filter(function (r) { return N[r[0]]; }).map(function (r) {
       return '<a target="_blank" rel="noopener" href="' + esc(N[r[0]]) + '">' + r[1] + "</a>";
     });
     if (redes.length) acciones += '<p class="redes">Síguenos: ' + redes.join(" · ") + "</p>";
-    if (!N.whatsapp && !N.telefono && !N.mapaUrl) acciones += '<p class="pendiente">Datos de contacto por confirmar.</p>';
     $("#accionesContacto").innerHTML = acciones;
+    $("#accionesContacto").hidden = !acciones;
 
     $("#servicios").innerHTML = (N.servicios || []).map(function (s) {
       return "<div><b>" + esc(s.titulo) + "</b><p>" + esc(s.texto) + "</p></div>";
@@ -188,10 +193,9 @@
         '<div class="detalle-cabeza"><div><span class="etiqueta">' + esc(e.categoria || "Otros") + '</span><h2 id="detalleTitulo">' + esc(e.nombre) + "</h2></div>" +
         '<button class="cerrar" type="button" data-cerrar aria-label="Cerrar">×</button></div>' +
         (e.descripcion ? "<p>" + esc(e.descripcion) + "</p>" : "") +
-        '<dl class="detalle-datos">' + dato("Clave", e.clave) + dato("Muestra", e.muestra) + "</dl>" +
+        (e.muestra ? '<dl class="detalle-datos">' + dato("Muestra", e.muestra) + "</dl>" : "") +
         (e.preparacion ? '<div><h3>Preparación</h3><p class="preparacion">' + esc(e.preparacion) + "</p></div>" : "") +
         (incluye.length ? '<div><h3>Incluye</h3><ul class="incluye">' + incluye.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul></div>" : "") +
-        (e.sinonimos ? '<p class="nota">También conocido como: ' + esc(e.sinonimos) + "</p>" : "") +
         '<div class="detalle-pie"><span class="nota">Agrégalo a tu lista para pedir precio por WhatsApp.</span>' + botonAgregar(e) + "</div>" +
       "</div>";
     var d = $("#detalle");
