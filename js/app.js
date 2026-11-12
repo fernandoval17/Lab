@@ -149,7 +149,7 @@
   function pintarCatalogo() {
     var lista = filtrados();
     $("#rejilla").innerHTML = lista.map(function (e) {
-      var meta = [e.muestra, e.entrega && "Entrega: " + e.entrega].filter(Boolean)
+      var meta = [e.muestra].filter(Boolean)
         .map(function (m) { return "<span>" + esc(m) + "</span>"; }).join("");
       return '<article class="tarjeta">' +
         '<span class="etiqueta">' + esc(e.categoria || "Otros") + "</span>" +
@@ -188,7 +188,7 @@
         '<div class="detalle-cabeza"><div><span class="etiqueta">' + esc(e.categoria || "Otros") + '</span><h2 id="detalleTitulo">' + esc(e.nombre) + "</h2></div>" +
         '<button class="cerrar" type="button" data-cerrar aria-label="Cerrar">×</button></div>' +
         (e.descripcion ? "<p>" + esc(e.descripcion) + "</p>" : "") +
-        '<dl class="detalle-datos">' + dato("Clave", e.clave) + dato("Muestra", e.muestra) + dato("Entrega", e.entrega) + "</dl>" +
+        '<dl class="detalle-datos">' + dato("Clave", e.clave) + dato("Muestra", e.muestra) + "</dl>" +
         (e.preparacion ? '<div><h3>Preparación</h3><p class="preparacion">' + esc(e.preparacion) + "</p></div>" : "") +
         (incluye.length ? '<div><h3>Incluye</h3><ul class="incluye">' + incluye.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul></div>" : "") +
         (e.sinonimos ? '<p class="nota">También conocido como: ' + esc(e.sinonimos) + "</p>" : "") +
