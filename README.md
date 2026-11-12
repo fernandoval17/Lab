@@ -13,13 +13,15 @@ cualquier hospedaje de páginas estáticas (por ejemplo GitHub Pages).
 
 | Qué quiere cambiar | Archivo |
 | --- | --- |
-| Estudios, precios, preparación | `datos/estudios.js` |
+| Estudios y su preparación | `datos/estudios.js` |
 | Dirección, teléfono, WhatsApp, horarios, servicios | `datos/negocio.js` |
 
 Cada archivo trae instrucciones al inicio. Puntos importantes:
 
-- **Precios:** escriba solo el número (`precio: 180`). Con `precio: null` se muestra
-  "Consultar precio".
+- **Precios:** la página no muestra precios. El paciente arma su lista y la envía por
+  WhatsApp para pedirlos, o muestra el código QR de su lista en el laboratorio.
+- **Código QR:** con la página publicada en internet, el QR abre la misma página con la
+  lista del paciente. Sin publicar, el QR contiene la lista en texto.
 - **WhatsApp:** al llenar `whatsapp` en `datos/negocio.js` aparece el botón
   "Enviar lista por WhatsApp".
 - **Aviso amarillo:** cuando la información ya esté revisada, cambie

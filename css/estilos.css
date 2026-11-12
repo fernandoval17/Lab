@@ -101,8 +101,7 @@ button { font: inherit; cursor: pointer; }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--tinta-suave); font-size: .88rem; }
 .meta span::before { content: "•"; color: var(--cielo); margin-right: 6px; }
 .tarjeta-pie { margin-top: auto; padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.precio { font-weight: 700; font-size: 1.15rem; }
-.precio.consultar { font-size: .92rem; font-weight: 600; color: var(--tinta-suave); }
+.enlace { border: 0; background: none; padding: 0; color: var(--azul); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
 .vacio { text-align: center; padding: 40px 0; color: var(--tinta-suave); }
 
 /* Cómo funciona */
@@ -156,13 +155,17 @@ button { font: inherit; cursor: pointer; }
 .cajon-cabeza { display: flex; justify-content: space-between; align-items: center; padding: 20px 22px; border-bottom: 1px solid var(--linea); }
 .cajon-cabeza h2 { font-size: 1.3rem; }
 .cajon-cuerpo { flex: 1; overflow: auto; padding: 8px 22px; }
-.cajon-pie { padding: 18px 22px; border-top: 1px solid var(--linea); display: grid; gap: 10px; background: var(--crema); }
+.cajon-pie { max-height: 70dvh; overflow: auto; padding: 18px 22px; border-top: 1px solid var(--linea); display: grid; gap: 10px; background: var(--crema); }
 .renglon { display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--linea); }
 .renglon b { display: block; }
 .renglon small { color: var(--tinta-suave); }
 .renglon-lado { text-align: right; display: grid; gap: 4px; justify-items: end; flex: none; }
 .quitar { border: 0; background: none; color: #a33; text-decoration: underline; padding: 0; font-size: .85rem; }
-.total { display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 700; }
+.qr { background: #fff; border: 1px solid var(--linea); border-radius: 12px; padding: 6px; width: min(230px, 100%); justify-self: center; }
+.qr svg { display: block; width: 100%; height: auto; }
+.qr-nota { text-align: center; }
+.pie-enlaces { display: flex; justify-content: space-between; gap: 12px; }
+.quitar.neutro { color: var(--azul); }
 .nota { font-size: .82rem; color: var(--tinta-suave); }
 .lista-vacia { text-align: center; color: var(--tinta-suave); padding: 48px 10px; }
 

@@ -14,9 +14,6 @@
   var norm = function (s) {
     return String(s == null ? "" : s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
   };
-  var pesos = new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 2 });
-  var tienePrecio = function (e) { return typeof e.precio === "number" && isFinite(e.precio) && e.precio > 0; };
-  var textoPrecio = function (e) { return tienePrecio(e) ? pesos.format(e.precio) : "Consultar precio"; };
 
   // Identificador único y texto de búsqueda por estudio.
   var porId = {};
@@ -28,7 +25,7 @@
     porId[id] = e;
   });
 
-  var estado = { texto: "", categoria: "", lista: leerLista() };
+  var estado = { texto: "", categoria: "", lista: leerLista(), qrVisible: false };
 
   function leerLista() {
     try {
@@ -129,7 +126,7 @@
         '<span class="etiqueta">' + esc(e.categoria || "Otros") + "</span>" +
         '<h3><button type="button" data-ver="' + esc(e.id) + '">' + esc(e.nombre) + "</button></h3>" +
         '<div class="meta">' + meta + "</div>" +
-        '<div class="tarjeta-pie"><span class="precio' + (tienePrecio(e) ? "" : " consultar") + '">' + textoPrecio(e) + "</span>" + botonAgregar(e) + "</div>" +
+        '<div class="tarjeta-pie"><button class="enlace" type="button" data-ver="' + esc(e.id) + '">Ver detalles</button>' + botonAgregar(e) + "</div>" +
         "</article>";
     }).join("");
     $("#vacio").hidden = lista.length > 0;
@@ -162,7 +159,7 @@
         (e.preparacion ? '<div><h3>Preparación</h3><p class="preparacion">' + esc(e.preparacion) + "</p></div>" : "") +
         (incluye.length ? '<div><h3>Incluye</h3><ul class="incluye">' + incluye.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul></div>" : "") +
         (e.sinonimos ? '<p class="nota">También conocido como: ' + esc(e.sinonimos) + "</p>" : "") +
-        '<div class="detalle-pie"><span class="precio' + (tienePrecio(e) ? "" : " consultar") + '">' + textoPrecio(e) + "</span>" + botonAgregar(e) + "</div>" +
+        '<div class="detalle-pie"><span class="nota">Agrégalo a tu lista para pedir precio por WhatsApp.</span>' + botonAgregar(e) + "</div>" +
       "</div>";
     var d = $("#detalle");
     d.dataset.id = id;
@@ -175,12 +172,31 @@
   function textoLista() {
     var sel = estudiosEnLista();
     var lineas = ["Hola, me interesan estos estudios en " + (N.nombre || "el laboratorio") + ":"];
-    sel.forEach(function (e) { lineas.push("• " + e.nombre + (tienePrecio(e) ? " — " + pesos.format(e.precio) : "")); });
-    if (sel.length && sel.every(tienePrecio)) {
-      lineas.push("Total estimado: " + pesos.format(sel.reduce(function (s, e) { return s + e.precio; }, 0)));
-    }
-    lineas.push("¿Me pueden confirmar precio y preparación? Gracias.");
+    sel.forEach(function (e) { lineas.push("• " + e.nombre); });
+    lineas.push("¿Me pueden dar el precio y confirmar la preparación? Gracias.");
     return lineas.join("\n");
+  }
+
+  // Contenido del código QR: si la página está publicada, un enlace que abre
+  // esta misma lista; si no, la lista en texto.
+  function contenidoQR() {
+    var sel = estudiosEnLista();
+    if (/^https?:$/.test(location.protocol)) {
+      return location.origin + location.pathname + "?lista=" + sel.map(function (e) { return encodeURIComponent(e.id); }).join(",");
+    }
+    return [(N.nombre || "Laboratorio") + " - Lista de estudios (" + sel.length + ")"]
+      .concat(sel.map(function (e, i) { return (i + 1) + ". " + e.nombre + (e.clave ? " [" + e.clave + "]" : ""); })).join("\n");
+  }
+
+  function svgQR(texto) {
+    if (typeof qrcode !== "function") return "";
+    try {
+      qrcode.stringToBytes = qrcode.stringToBytesFuncs["UTF-8"];
+      var q = qrcode(0, "M");
+      q.addData(texto, "Byte");
+      q.make();
+      return q.createSvgTag({ cellSize: 4, margin: 4, scalable: true });
+    } catch (err) { return ""; }
   }
 
   function pintarLista() {
@@ -193,22 +209,19 @@
     }
     $("#listaCuerpo").innerHTML = sel.map(function (e) {
       return '<div class="renglon"><div><b>' + esc(e.nombre) + "</b><small>" + esc(e.preparacion || "") + "</small></div>" +
-        '<div class="renglon-lado"><span>' + textoPrecio(e) + '</span><button class="quitar" type="button" data-alternar="' + esc(e.id) + '">Quitar</button></div></div>';
+        '<div class="renglon-lado"><button class="quitar" type="button" data-alternar="' + esc(e.id) + '">Quitar</button></div></div>';
     }).join("");
 
-    var conPrecio = sel.filter(tienePrecio);
-    var pie = "";
-    if (conPrecio.length) {
-      var total = conPrecio.reduce(function (s, e) { return s + e.precio; }, 0);
-      pie += '<div class="total"><span>Total estimado</span><span>' + pesos.format(total) + "</span></div>";
-      if (conPrecio.length < sel.length) pie += '<p class="nota">No incluye ' + (sel.length - conPrecio.length) + " estudio(s) con precio por consultar.</p>";
-    }
-    pie += N.whatsapp
-      ? '<a class="boton boton-primario" target="_blank" rel="noopener" href="' + esc(enlaceWhatsApp(textoLista())) + '">Enviar lista por WhatsApp</a>'
+    var qr = svgQR(contenidoQR());
+    var pie = N.whatsapp
+      ? '<a class="boton boton-primario" target="_blank" rel="noopener" href="' + esc(enlaceWhatsApp(textoLista())) + '">Pedir precios por WhatsApp</a>'
       : "";
-    pie += '<button class="boton" type="button" id="copiarLista">Copiar lista</button>' +
-      '<button class="quitar" type="button" id="vaciarLista">Vaciar lista</button>' +
-      '<p class="nota">Precios y disponibilidad se confirman en sucursal.</p>';
+    if (qr) {
+      pie += '<button class="boton" type="button" id="alternarQR" aria-expanded="' + estado.qrVisible + '">' + (estado.qrVisible ? "Ocultar código QR" : "Mostrar código QR") + "</button>";
+      if (estado.qrVisible) pie += '<div class="qr" role="img" aria-label="Código QR con tu lista de estudios">' + qr + '</div><p class="nota qr-nota">Muestra este código al llegar al laboratorio para que escaneen tu lista.</p>';
+    }
+    pie += '<div class="pie-enlaces"><button class="quitar neutro" type="button" id="copiarLista">Copiar lista</button>' +
+      '<button class="quitar" type="button" id="vaciarLista">Vaciar lista</button></div>';
     $("#listaPie").innerHTML = pie;
   }
 
@@ -248,7 +261,7 @@
 
   // ───────── Eventos ─────────
   document.addEventListener("click", function (ev) {
-    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-sugerencia],[data-cerrar],#abrirLista,#copiarLista,#vaciarLista");
+    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-sugerencia],[data-cerrar],#abrirLista,#copiarLista,#vaciarLista,#alternarQR");
     if (!t) {
       // Clic en el fondo oscuro cierra el diálogo.
       if (ev.target.tagName === "DIALOG") ev.target.close();
@@ -266,15 +279,24 @@
     else if (t.hasAttribute("data-cerrar")) t.closest("dialog").close();
     else if (t.id === "abrirLista") { pintarLista(); $("#lista").showModal(); }
     else if (t.id === "copiarLista") copiar(textoLista());
+    else if (t.id === "alternarQR") { estado.qrVisible = !estado.qrVisible; pintarLista(); }
     else if (t.id === "vaciarLista") { estado.lista = []; guardarLista(); pintarCatalogo(); pintarLista(); }
   });
 
   $("#buscar").addEventListener("input", function (ev) { estado.texto = ev.target.value; pintarCatalogo(); });
   $("#formBuscar").addEventListener("submit", function (ev) { ev.preventDefault(); $("#estudios").scrollIntoView(); });
 
+  // Enlace del código QR: ?lista=BH,GLU abre la página con esa lista.
+  var recibida = new URLSearchParams(location.search).get("lista");
+  if (recibida) {
+    var ids = recibida.split(",").filter(function (id, i, a) { return porId[id] && a.indexOf(id) === i; });
+    if (ids.length) estado.lista = ids;
+  }
+
   pintarNegocio();
   pintarSugerencias();
   pintarFiltros();
   pintarCatalogo();
   pintarLista();
+  if (recibida && estado.lista.length) $("#lista").showModal();
 })();
