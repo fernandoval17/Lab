@@ -87,7 +87,7 @@ button { font: inherit; cursor: pointer; }
 .acciones-contacto[hidden] { display: none; }
 .txt-corto { display: none; }
 
-.ventajas { list-style: none; margin: 0 0 26px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; font-weight: 600; }
+.ventajas { list-style: none; margin: 0 0 26px; padding: 0; display: grid; gap: 10px; font-weight: 600; }
 .ventajas li { display: flex; align-items: center; gap: 8px; }
 .ventajas li[hidden] { display: none; }
 .ventajas li::before { content: "✓"; flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--azul); color: #fff; font-size: .72rem; display: grid; place-items: center; }
@@ -236,7 +236,7 @@ button { font: inherit; cursor: pointer; }
   .cartel-dato { font-size: 1rem; grid-row: 3; }
   .cartel-ayuda { grid-column: 1 / -1; grid-row: 4; margin-top: 12px; padding-top: 12px; gap: 10px; text-align: center; }
   .cartel-ayuda p { font-size: .9rem; }
-  .ventajas { display: none; }
+  .ventajas { margin: 12px 0 0; gap: 8px; font-size: .95rem; }
   /* Celular: "Estudios frecuentes" va debajo del panel de horario y contacto. */
   .portada { padding-top: 14px; }
   .portada-fila { gap: 0; }

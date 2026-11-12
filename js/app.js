@@ -62,8 +62,6 @@
       ? N.horarios.map(function (h) { return esc(h.dias) + "<br>" + esc(h.horas); }).join("<br>") : pendiente;
     $("#cartelUrgencias").innerHTML = (N.urgencias || N.telefono) ? tel(N.urgencias || N.telefono) : pendiente;
 
-    var h0 = (N.horarios || [])[0];
-    if (h0) { $("#ventajaHorario").textContent = h0.dias + ", " + h0.horas; $("#ventajaHorario").hidden = false; }
 
     var abierto = estaAbierto();
     document.querySelectorAll("[data-estado-horario]").forEach(function (el) {
