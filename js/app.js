@@ -325,7 +325,6 @@
     var suave = !matchMedia("(prefers-reduced-motion: reduce)").matches;
     var arriba = haciaArriba;
     window.scrollTo({ top: arriba ? 0 : document.documentElement.scrollHeight, behavior: suave ? "smooth" : "auto" });
-    avisar(arriba ? "Subiendo al inicio" : "Bajando al final");
   });
 
   var temporizador;
