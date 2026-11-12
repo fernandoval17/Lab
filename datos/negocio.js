@@ -9,7 +9,7 @@ window.NEGOCIO = {
   ubicacionCorta: "Etzatlán, Jalisco",
 
   // Cambie a false cuando los estudios y estos datos ya estén revisados.
-  catalogoPreliminar: true,
+  catalogoPreliminar: false,
 
   direccion: "Aldama 559-3, Col. Revolución, C.P. 46500, Etzatlán, Jalisco",
   telefono: "386 121 9588",
