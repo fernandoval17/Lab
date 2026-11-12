@@ -13,10 +13,10 @@ window.NEGOCIO = {
 
   direccion: "Aldama 559-3, Col. Revolución, C.P. 46500, Etzatlán, Jalisco",
   telefono: "386 121 9588",
-  telefono2: "386 106 6352", // Segundo teléfono para citas
+  telefono2: "",  // Segundo teléfono (opcional)
   urgencias: "386 121 9588", // Teléfono para urgencias fuera de horario
   whatsapp: "523861219588", // Solo números, con 52 al inicio
-  correo: "laboratoriostamargarita@gmail.com",
+  correo: "info@laboratoriostamargarita.com",
   facebook: "https://www.facebook.com/share/1DxWCSfDzq/",
   instagram: "https://www.instagram.com/laboratoriostamargarita",
   mapaUrl: "https://maps.app.goo.gl/ro9jUFCHSbpLfC7u8",
