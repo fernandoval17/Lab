@@ -5,17 +5,17 @@
  */
 window.NEGOCIO = {
   nombre: "Laboratorio Sta. Margarita",
-  lema: "Análisis clínicos confiables, cerca de ti",
+  lema: "Análisis clínicos y especializados",
   ubicacionCorta: "Etzatlán, Jalisco",
 
   // Cambie a false cuando los estudios y estos datos ya estén revisados.
   catalogoPreliminar: true,
 
-  direccion: "",   // Ej. "Calle Ejemplo 123, Centro, Etzatlán, Jalisco"
+  direccion: "Aldama 559-3, Col. Revolución, C.P. 46500, Etzatlán, Jalisco",
   telefono: "",    // Ej. "386 123 4567"
   whatsapp: "",    // Solo números con lada de país. Ej. "523861234567"
   correo: "",      // Ej. "contacto@ejemplo.com"
-  mapaUrl: "",     // Enlace de Google Maps de la sucursal
+  mapaUrl: "https://maps.app.goo.gl/ro9jUFCHSbpLfC7u8",
 
   horarios: [
     // { dias: "Lunes a viernes", horas: "7:00 a 15:00" },
