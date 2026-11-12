@@ -234,6 +234,11 @@ button { font: inherit; cursor: pointer; }
   .cartel-ayuda { grid-column: 1 / -1; grid-row: 4; margin-top: 12px; padding-top: 12px; gap: 10px; text-align: center; }
   .cartel-ayuda p { font-size: .9rem; }
   .ventajas { display: none; }
+  /* Celular: "Estudios frecuentes" va debajo del panel de horario y contacto. */
+  .portada-fila { gap: 0; }
+  .portada-fila > div:first-child { display: contents; }
+  .portada-fila .cartel { order: 1; margin-top: 22px; }
+  .portada-fila .sugerencias { order: 2; margin-top: 22px; }
   .flotante { padding: 14px; }
   .flotante span { display: none; }
   .barra-lista { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 31; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 0; border-radius: 14px; background: var(--azul); color: #fff; padding: 14px 18px; box-shadow: 0 8px 24px rgba(0, 31, 77, .35); }
