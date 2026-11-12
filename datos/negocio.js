@@ -12,14 +12,16 @@ window.NEGOCIO = {
   catalogoPreliminar: true,
 
   direccion: "Aldama 559-3, Col. Revolución, C.P. 46500, Etzatlán, Jalisco",
-  telefono: "",    // Ej. "386 123 4567"
-  whatsapp: "",    // Solo números con lada de país. Ej. "523861234567"
-  correo: "",      // Ej. "contacto@ejemplo.com"
+  telefono: "386 121 9588",
+  urgencias: "386 121 9588", // Teléfono para urgencias fuera de horario
+  whatsapp: "",    // Solo números con lada de país. Ej. "523861219588"
+  correo: "laboratoriostamargarita@gmail.com",
+  facebook: "https://www.facebook.com/share/1DxWCSfDzq/",
+  instagram: "https://www.instagram.com/laboratoriostamargarita",
   mapaUrl: "https://maps.app.goo.gl/ro9jUFCHSbpLfC7u8",
 
   horarios: [
-    // { dias: "Lunes a viernes", horas: "7:00 a 15:00" },
-    // { dias: "Sábado", horas: "7:00 a 13:00" },
+    { dias: "Lunes a sábado", horas: "7:00 am a 2:30 pm" },
   ],
 
   servicios: [
