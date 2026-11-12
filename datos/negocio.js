@@ -27,11 +27,9 @@ window.NEGOCIO = {
     { dias: "Lunes a sábado", horas: "7:00 am a 2:30 pm", diasSemana: [1, 2, 3, 4, 5, 6], abre: "07:00", cierra: "14:30" },
   ],
 
-  servicios: [
-    { titulo: "Toma de muestras a domicilio", texto: "Agenda tu cita por WhatsApp o teléfono y vamos a tu casa." },
-    { titulo: "Toma de muestras en sucursal", texto: "Atención por personal capacitado, de lunes a sábado." },
-    { titulo: "Orientación previa", texto: "Le explicamos la preparación que requiere cada estudio." },
-  ],
+  // Recuadros de servicios bajo "Cómo funciona". Vacío = no se muestran.
+  // Ej. { titulo: "Toma de muestras a domicilio", texto: "Agenda tu cita por WhatsApp." },
+  servicios: [],
 
   indicaciones: [
     "Presente la orden de su médico si cuenta con ella.",

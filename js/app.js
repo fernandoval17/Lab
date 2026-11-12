@@ -97,6 +97,7 @@
     $("#servicios").innerHTML = (N.servicios || []).map(function (s) {
       return "<div><b>" + esc(s.titulo) + "</b><p>" + esc(s.texto) + "</p></div>";
     }).join("");
+    $("#servicios").hidden = !(N.servicios || []).length;
     $("#listaIndicaciones").innerHTML = (N.indicaciones || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
   }
 
