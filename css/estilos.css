@@ -85,6 +85,7 @@ button { font: inherit; cursor: pointer; }
 .cartel-acciones { display: grid; gap: 8px; }
 .cartel-acciones .boton { width: 100%; padding: 9px 14px; }
 .acciones-contacto[hidden] { display: none; }
+.txt-corto { display: none; }
 
 .ventajas { list-style: none; margin: 0 0 26px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; font-weight: 600; }
 .ventajas li { display: flex; align-items: center; gap: 8px; }
@@ -251,6 +252,42 @@ button { font: inherit; cursor: pointer; }
   .con-barra .flecha { bottom: 142px; }
   .con-barra .tostada { bottom: 84px; }
   .con-barra .pie { padding-bottom: 96px; }
+
+  /* Tamaños compactos en celular */
+  .cabecera-fila { min-height: 58px; gap: 12px; }
+  .marca img { height: 42px; }
+  .boton-lista { padding: 7px 12px; font-size: .9rem; gap: 6px; }
+  .boton-lista svg { width: 16px; height: 16px; }
+  .contador { min-width: 20px; height: 20px; font-size: .75rem; }
+  html { scroll-padding-top: 70px; }
+  .sobretitulo { font-size: .7rem; letter-spacing: .08em; margin-bottom: 8px; }
+  .sobretitulo-lugar { display: none; }
+  .portada h1 { font-size: 1.75rem; line-height: 1.12; }
+  .portada-texto { font-size: .95rem; line-height: 1.5; margin: 10px 0 0; }
+  .portada-fila .cartel { margin-top: 18px; }
+  .portada-fila .sugerencias { margin-top: 18px; }
+  .cartel { padding: 12px 12px 14px; }
+  .estado-horario { font-size: .72rem; padding: 2px 9px; }
+  .cartel-titulo { font-size: 1.05rem; }
+  .cartel-dato { font-size: .92rem; }
+  .cartel-ayuda { margin-top: 10px; padding-top: 10px; gap: 8px; }
+  .cartel-ayuda p { font-size: .82rem; line-height: 1.35; text-wrap: balance; }
+  .portada { padding-bottom: 22px; }
+  .rejilla { gap: 12px; }
+  .tarjeta { padding: 14px 16px; gap: 6px; }
+  .tarjeta h3 { font-size: 1.05rem; }
+  .tarjeta-pie { padding-top: 6px; }
+  .boton-chico { padding: 6px 14px; font-size: .88rem; }
+  .seccion-cabeza { margin-bottom: 12px; }
+  .buscador-catalogo { margin-bottom: 10px; }
+  .filtros { margin-bottom: 16px; }
+  .seccion { padding: 32px 0; }
+  .cartel-acciones { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .txt-largo { display: none; }
+  .txt-corto { display: inline; }
+  .cartel-acciones .boton { padding: 9px 10px; font-size: .9rem; min-height: 42px; white-space: normal; text-align: center; line-height: 1.2; }
+  .cartel-acciones .boton-primario { grid-column: 1 / -1; }
+  .ficha { padding: 6px 12px; font-size: .88rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

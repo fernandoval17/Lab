@@ -79,7 +79,7 @@
     // Panel de ayuda (portada)
     var ayuda = "";
     if (N.whatsapp) ayuda += '<a class="boton boton-primario" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera información sobre sus estudios.") + '">Escribir por WhatsApp</a>';
-    if (N.whatsapp) ayuda += '<a class="boton" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.") + '">Agendar toma a domicilio</a>';
+    if (N.whatsapp) ayuda += '<a class="boton" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.") + '"><span class="txt-largo">Agendar toma a domicilio</span><span class="txt-corto">Toma a domicilio</span></a>';
     if (N.telefono) ayuda += '<a class="boton" href="tel:' + esc(N.telefono.replace(/[^\d+]/g, "")) + '">Llamar</a>';
     $("#ayudaAcciones").innerHTML = ayuda;
     $("#ayuda").hidden = !ayuda;
