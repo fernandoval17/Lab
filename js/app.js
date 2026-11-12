@@ -302,6 +302,37 @@
     if (desplazar) $("#estudios").scrollIntoView();
   }
 
+  // ───────── Botón para ir al inicio / al final ─────────
+  var flecha = $("#flecha"), tipFlecha = $("#flechaTip"), haciaArriba = null, avisoFlecha;
+  function actualizarFlecha() {
+    var max = document.documentElement.scrollHeight - innerHeight;
+    flecha.hidden = max < 200;
+    var arriba = scrollY > max / 2;
+    if (arriba === haciaArriba) return;
+    haciaArriba = arriba;
+    var texto = arriba ? "Ir al inicio" : "Ir al final";
+    flecha.classList.toggle("arriba", arriba);
+    flecha.setAttribute("aria-label", texto + " de la página");
+    tipFlecha.textContent = texto;
+    // Aviso breve cada vez que cambia la dirección (útil en celular, sin hover).
+    flecha.classList.add("aviso");
+    clearTimeout(avisoFlecha);
+    avisoFlecha = setTimeout(function () { flecha.classList.remove("aviso"); }, 1800);
+  }
+  var pendienteFlecha = false;
+  window.addEventListener("scroll", function () {
+    if (pendienteFlecha) return;
+    pendienteFlecha = true;
+    requestAnimationFrame(function () { pendienteFlecha = false; actualizarFlecha(); });
+  }, { passive: true });
+  window.addEventListener("resize", actualizarFlecha);
+  flecha.addEventListener("click", function () {
+    var suave = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var arriba = haciaArriba;
+    window.scrollTo({ top: arriba ? 0 : document.documentElement.scrollHeight, behavior: suave ? "smooth" : "auto" });
+    avisar(arriba ? "Subiendo al inicio" : "Bajando al final");
+  });
+
   var temporizador;
   function avisar(texto) {
     var t = $("#tostada");
@@ -372,4 +403,5 @@
   pintarCatalogo();
   pintarLista();
   if (estado.deQR) abrirDialogo($("#lista"));
+  actualizarFlecha();
 })();

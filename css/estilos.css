@@ -133,6 +133,13 @@ button { font: inherit; cursor: pointer; }
 
 .flotante { position: fixed; right: 18px; bottom: 18px; z-index: 30; display: inline-flex; align-items: center; gap: 8px; background: #128c4a; color: #fff; text-decoration: none; font-weight: 700; padding: 12px 18px; border-radius: 999px; box-shadow: 0 6px 20px rgba(0, 0, 0, .25); }
 .flotante:hover { background: #0e743d; }
+.flecha { position: fixed; right: 18px; bottom: 80px; z-index: 30; width: 48px; height: 48px; border-radius: 50%; border: 0; background: var(--azul); color: #fff; display: grid; place-items: center; box-shadow: 0 6px 20px rgba(0, 31, 77, .3); transition: background .15s, transform .15s; }
+.flecha:hover { background: var(--azul-oscuro); }
+.flecha[hidden] { display: none; }
+.flecha svg { transition: transform .25s; }
+.flecha.arriba svg { transform: rotate(180deg); }
+.flecha-tip { position: absolute; right: calc(100% + 10px); top: 50%; transform: translateY(-50%); white-space: nowrap; background: var(--tinta); color: #fff; font-size: .85rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.flecha:hover .flecha-tip, .flecha:focus-visible .flecha-tip, .flecha.aviso .flecha-tip { opacity: 1; }
 .flotante[hidden], .barra-lista[hidden] { display: none; }
 .barra-lista { display: none; }
 
@@ -234,6 +241,8 @@ button { font: inherit; cursor: pointer; }
   .barra-lista { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 31; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 0; border-radius: 14px; background: var(--azul); color: #fff; padding: 14px 18px; box-shadow: 0 8px 24px rgba(0, 31, 77, .35); }
   .barra-lista b { text-decoration: underline; text-underline-offset: 4px; }
   .con-barra .flotante { bottom: 78px; }
+  .flecha { bottom: 82px; right: 20px; }
+  .con-barra .flecha { bottom: 142px; }
   .con-barra .tostada { bottom: 84px; }
   .con-barra .pie { padding-bottom: 96px; }
 }
