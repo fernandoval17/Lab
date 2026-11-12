@@ -297,7 +297,6 @@
   function buscar(texto, desplazar) {
     estado.texto = texto;
     if ($("#buscar").value !== texto) $("#buscar").value = texto;
-    if ($("#buscar2").value !== texto) $("#buscar2").value = texto;
     pintarCatalogo();
     if (desplazar) $("#estudios").scrollIntoView();
   }
@@ -373,8 +372,6 @@
   });
 
   $("#buscar").addEventListener("input", function (ev) { buscar(ev.target.value, false); });
-  $("#buscar2").addEventListener("input", function (ev) { buscar(ev.target.value, false); });
-  $("#formBuscar").addEventListener("submit", function (ev) { ev.preventDefault(); $("#buscar").blur(); $("#estudios").scrollIntoView(); });
 
   // Enlace del código QR: #lista=BH,GLU abre la página con esa lista. Va después
   // de "#" para que los estudios del paciente nunca se envíen al servidor.
