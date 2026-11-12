@@ -212,7 +212,7 @@
   function contenidoQR() {
     var sel = estudiosEnLista();
     if (/^https?:$/.test(location.protocol)) {
-      return location.origin + location.pathname + "?lista=" + sel.map(function (e) { return encodeURIComponent(e.id); }).join(",");
+      return location.origin + location.pathname + "#lista=" + sel.map(function (e) { return encodeURIComponent(e.id); }).join(",");
     }
     return [(N.nombre || "Laboratorio") + " - Lista de estudios (" + sel.length + ")"]
       .concat(sel.map(function (e, i) { return (i + 1) + ". " + e.nombre + (e.clave ? " [" + e.clave + "]" : ""); })).join("\n");
@@ -344,8 +344,10 @@
   $("#buscar2").addEventListener("input", function (ev) { buscar(ev.target.value, false); });
   $("#formBuscar").addEventListener("submit", function (ev) { ev.preventDefault(); $("#buscar").blur(); $("#estudios").scrollIntoView(); });
 
-  // Enlace del código QR: ?lista=BH,GLU abre la página con esa lista.
-  var recibida = new URLSearchParams(location.search).get("lista");
+  // Enlace del código QR: #lista=BH,GLU abre la página con esa lista. Va después
+  // de "#" para que los estudios del paciente nunca se envíen al servidor.
+  var recibida = location.hash.indexOf("#lista=") === 0 ? decodeURIComponent(location.hash.slice(7)) : "";
+  window.addEventListener("hashchange", function () { if (location.hash.indexOf("#lista=") === 0) location.reload(); });
   if (recibida) {
     var ids = recibida.split(",").filter(function (id, i, a) { return porId[id] && a.indexOf(id) === i; });
     if (ids.length) {
@@ -353,8 +355,8 @@
       estado.deQR = true;
       guardarLista();
     }
-    // Se quita ?lista= de la dirección para que recargar no deshaga cambios.
-    try { history.replaceState(null, "", location.pathname + location.hash); } catch (err) { /* sin historial */ }
+    // Se quita la lista de la dirección para que no quede en el historial.
+    try { history.replaceState(null, "", location.pathname); } catch (err) { /* sin historial */ }
   }
 
   pintarNegocio();
