@@ -1,3 +1,12 @@
+/* League Spartan (SIL Open Font License 1.1, ver fuentes/LICENCIA-League-Spartan.txt) */
+@font-face {
+  font-family: "League Spartan";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fuentes/league-spartan-latin-wght-normal.woff2") format("woff2-variations"), url("../fuentes/league-spartan-latin-wght-normal.woff2") format("woff2");
+}
+
 :root {
   --azul: #004aad;
   --azul-oscuro: #00337a;

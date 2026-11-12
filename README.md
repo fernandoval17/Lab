@@ -14,7 +14,7 @@ Abra `index.html` en el navegador.
 2. En **Source** elija **Deploy from a branch**.
 3. En **Branch** elija la rama que contiene la página y la carpeta **/ (root)**, y presione **Save**.
 4. En uno o dos minutos la página queda en
-   `https://fernandoval17.github.io/CalculadoraGuamuchil/`.
+   `https://fernandoval17.github.io/lab/`.
 
 Si el repositorio es privado, GitHub Pages solo está disponible en planes de pago; en el plan
 gratuito hay que hacerlo público en **Settings → General → Change visibility**.
