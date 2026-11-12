@@ -235,6 +235,7 @@ button { font: inherit; cursor: pointer; }
   .cartel-ayuda p { font-size: .9rem; }
   .ventajas { display: none; }
   /* Celular: "Estudios frecuentes" va debajo del panel de horario y contacto. */
+  .portada { padding-top: 14px; }
   .portada-fila { gap: 0; }
   .portada-fila > div:first-child { display: contents; }
   .portada-fila .cartel { order: 1; margin-top: 22px; }
