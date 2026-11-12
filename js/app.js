@@ -12,7 +12,7 @@
     });
   };
   var norm = function (s) {
-    return String(s == null ? "" : s).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+    return String(s == null ? "" : s).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
   };
 
   // Identificador único y texto de búsqueda por estudio.
@@ -63,12 +63,8 @@
     $("#cartelUrgencias").innerHTML = (N.urgencias || N.telefono) ? tel(N.urgencias || N.telefono) : pendiente;
 
 
-    var abierto = estaAbierto();
-    document.querySelectorAll("[data-estado-horario]").forEach(function (el) {
-      el.hidden = abierto === null;
-      el.textContent = abierto ? "Abierto ahora" : "Cerrado ahora";
-      el.classList.toggle("abierto", !!abierto);
-    });
+    pintarEstadoHorario();
+    setInterval(pintarEstadoHorario, 60000);
     if (N.whatsapp) {
       $("#flotante").href = enlaceWhatsApp("Hola, quisiera información sobre sus estudios.");
       $("#flotante").hidden = false;
@@ -97,6 +93,15 @@
     }).join("");
     $("#servicios").hidden = !(N.servicios || []).length;
     $("#listaIndicaciones").innerHTML = (N.indicaciones || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
+  }
+
+  function pintarEstadoHorario() {
+    var abierto = estaAbierto();
+    document.querySelectorAll("[data-estado-horario]").forEach(function (el) {
+      el.hidden = abierto === null;
+      el.textContent = abierto ? "Abierto ahora" : "Cerrado ahora";
+      el.classList.toggle("abierto", !!abierto);
+    });
   }
 
   // true / false según el horario; null si no hay horario estructurado.
@@ -267,6 +272,9 @@
   function alternar(id) {
     var e = porId[id];
     if (!e) return;
+    // Al repintar se recrean los botones: se recuerda dónde estaba el foco del teclado.
+    var activo = document.activeElement;
+    var zona = activo && activo.hasAttribute("data-alternar") ? activo.closest("#rejilla, #detalle, #lista") : null;
     var i = estado.lista.indexOf(id);
     if (i === -1) { estado.lista.push(id); avisar("Agregado: " + e.nombre); }
     else { estado.lista.splice(i, 1); avisar("Se quitó de tu lista"); }
@@ -275,6 +283,11 @@
     pintarLista();
     var d = $("#detalle");
     if (d.open && d.dataset.id === id) abrirDetalle(id);
+    if (zona) {
+      var destino = Array.prototype.filter.call(zona.querySelectorAll("[data-alternar]"), function (b) { return b.getAttribute("data-alternar") === id; })[0]
+        || zona.querySelector("[data-cerrar]");
+      if (destino) destino.focus({ preventScroll: true });
+    }
   }
 
   // Abrir un diálogo deja una entrada en el historial para que el botón
@@ -286,6 +299,8 @@
   }
   document.querySelectorAll("dialog").forEach(function (d) {
     d.addEventListener("close", function () {
+      var t = $("#tostada");
+      if (t.parentNode === d) document.body.appendChild(t);
       if (history.state && history.state.dialogo === d.id) history.back();
     });
   });
@@ -296,6 +311,8 @@
   function buscar(texto, desplazar) {
     estado.texto = texto;
     if ($("#buscar").value !== texto) $("#buscar").value = texto;
+    // Si la categoría elegida no tiene coincidencias, se busca en todo el catálogo.
+    if (estado.categoria && !filtrados().length) { estado.categoria = ""; pintarFiltros(); }
     pintarCatalogo();
     if (desplazar) $("#estudios").scrollIntoView();
   }
@@ -330,6 +347,9 @@
   var temporizador;
   function avisar(texto) {
     var t = $("#tostada");
+    // Una ventana abierta tapa todo lo que está fuera de ella, así que el aviso se mete dentro.
+    var casa = document.querySelector("dialog[open]") || document.body;
+    if (t.parentNode !== casa) casa.appendChild(t);
     t.textContent = texto;
     t.classList.add("visible");
     clearTimeout(temporizador);
@@ -388,6 +408,9 @@
     // Se quita la lista de la dirección para que no quede en el historial.
     try { history.replaceState(null, "", location.pathname); } catch (err) { /* sin historial */ }
   }
+
+  // Si la página se recargó con una ventana abierta, se limpia su marca del historial.
+  try { if (history.state && history.state.dialogo) history.replaceState(null, "", location.href); } catch (err) { /* sin historial */ }
 
   pintarNegocio();
   pintarSugerencias();

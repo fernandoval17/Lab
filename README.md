@@ -32,7 +32,10 @@ Cada archivo trae instrucciones al inicio. Puntos importantes:
   WhatsApp para pedirlos, o muestra el código QR de su lista en el laboratorio.
 - **Código QR:** con la página publicada en internet, el QR abre la misma página con la
   lista del paciente. Sin publicar, el QR contiene la lista en texto.
-- **WhatsApp:** al llenar `whatsapp` en `datos/negocio.js` aparece el botón
-  "Enviar lista por WhatsApp".
+- **WhatsApp:** el número está en `whatsapp`, dentro de `datos/negocio.js`; lo usan los
+  botones "Escribir por WhatsApp" y "Cotizar por WhatsApp".
+- **Datos de contacto:** el teléfono, la dirección, el horario y el correo también están
+  escritos en `index.html`, para que se vean aunque el navegador no ejecute JavaScript.
+  Si cambian, actualícelos en los dos archivos.
 - **Aviso amarillo:** cuando la información ya esté revisada, cambie
   `catalogoPreliminar` a `false` en `datos/negocio.js` para ocultarlo.
