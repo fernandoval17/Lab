@@ -54,8 +54,9 @@
     $("#datoHorario").innerHTML = (N.horarios || []).length
       ? N.horarios.map(function (h) { return esc(h.dias) + ": " + esc(h.horas); }).join("<br>")
       : pendiente;
-    $("#datoTelefono").innerHTML = N.telefono
-      ? '<a href="tel:' + esc(N.telefono.replace(/[^\d+]/g, "")) + '">' + esc(N.telefono) + "</a>" : pendiente;
+    var telefonos = [N.telefono, N.telefono2].filter(Boolean);
+    $("#datoTelefono").innerHTML = telefonos.length
+      ? telefonos.map(function (n) { return '<a href="tel:' + esc(n.replace(/[^\d+]/g, "")) + '">' + esc(n) + "</a>"; }).join(" · ") : pendiente;
     $("#datoCorreo").innerHTML = N.correo
       ? '<a href="mailto:' + esc(N.correo) + '">' + esc(N.correo) + "</a>" : pendiente;
 
@@ -66,6 +67,7 @@
 
     var acciones = "<p>¿Tienes dudas sobre un estudio o su preparación? Con gusto te orientamos.</p>";
     if (N.whatsapp) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera información sobre sus estudios.") + '">Escribir por WhatsApp</a>';
+    if (N.whatsapp) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.") + '">Agendar toma a domicilio</a>';
     if (N.telefono) acciones += '<a class="boton boton-claro" href="tel:' + esc(N.telefono.replace(/[^\d+]/g, "")) + '">Llamar</a>';
     if (N.correo) acciones += '<a class="boton boton-claro" href="mailto:' + esc(N.correo) + '">Enviar correo</a>';
     if (N.mapaUrl) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + esc(N.mapaUrl) + '">Cómo llegar</a>';
