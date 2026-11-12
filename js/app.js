@@ -62,6 +62,9 @@
       ? N.horarios.map(function (h) { return esc(h.dias) + "<br>" + esc(h.horas); }).join("<br>") : pendiente;
     $("#cartelUrgencias").innerHTML = (N.urgencias || N.telefono) ? tel(N.urgencias || N.telefono) : pendiente;
 
+    var h0 = (N.horarios || [])[0];
+    if (h0) { $("#ventajaHorario").textContent = h0.dias + ", " + h0.horas; $("#ventajaHorario").hidden = false; }
+
     var abierto = estaAbierto();
     document.querySelectorAll("[data-estado-horario]").forEach(function (el) {
       el.hidden = abierto === null;
@@ -169,7 +172,7 @@
     var populares = ["Biometría", "Glucosa", "Orina", "Tiroides", "Embarazo", "Check-up"].filter(function (t) {
       return ESTUDIOS.some(function (e) { return e._busqueda.indexOf(norm(t)) !== -1; });
     });
-    $("#sugerencias").innerHTML = populares.map(function (t) {
+    $("#sugerencias").innerHTML = (populares.length ? '<span class="sugerencias-titulo">Estudios frecuentes:</span>' : "") + populares.map(function (t) {
       return '<button class="ficha" type="button" data-sugerencia="' + esc(t) + '">' + esc(t) + "</button>";
     }).join("");
   }
@@ -201,7 +204,7 @@
 
   function textoLista() {
     var sel = estudiosEnLista();
-    var lineas = ["Hola, me interesan estos estudios en " + (N.nombre || "el laboratorio") + ":"];
+    var lineas = ["Hola, quisiera cotizar estos estudios en " + (N.nombre || "el laboratorio") + ":"];
     sel.forEach(function (e) { lineas.push("• " + e.nombre); });
     lineas.push("¿Me pueden dar el precio y confirmar la preparación? Gracias.");
     return lineas.join("\n");
@@ -247,7 +250,7 @@
 
     var qr = svgQR(contenidoQR());
     var pie = N.whatsapp
-      ? '<a class="boton boton-primario" target="_blank" rel="noopener" href="' + esc(enlaceWhatsApp(textoLista())) + '">Pedir precios por WhatsApp</a>'
+      ? '<a class="boton boton-primario" target="_blank" rel="noopener" href="' + esc(enlaceWhatsApp(textoLista())) + '">Cotizar por WhatsApp</a>'
       : "";
     if (qr) {
       pie += '<button class="boton" type="button" id="alternarQR" aria-expanded="' + estado.qrVisible + '">' + (estado.qrVisible ? "Ocultar código QR" : "Mostrar código QR") + "</button>";
