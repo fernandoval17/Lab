@@ -307,6 +307,8 @@
   function actualizarFlecha() {
     var max = document.documentElement.scrollHeight - innerHeight;
     flecha.hidden = max < 200;
+    // La flecha y el botón de WhatsApp aparecen hasta que la persona se desplaza.
+    document.body.classList.toggle("desplazado", scrollY > 40);
     var arriba = scrollY > max / 2;
     if (arriba === haciaArriba) return;
     haciaArriba = arriba;
