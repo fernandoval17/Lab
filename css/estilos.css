@@ -74,6 +74,7 @@ button { font: inherit; cursor: pointer; }
 .buscador { display: flex; align-items: center; gap: 8px; background: var(--papel); border: 1.5px solid var(--linea); border-radius: 999px; padding: 6px 6px 6px 18px; box-shadow: var(--sombra); max-width: 620px; color: var(--tinta-suave); }
 .buscador:focus-within { border-color: var(--azul); }
 .buscador input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; color: var(--tinta); padding: 10px 4px; }
+.buscador-catalogo { max-width: none; box-shadow: none; padding: 4px 6px 4px 16px; margin-bottom: 14px; }
 .sugerencias { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 
 .ficha { border: 1px solid var(--linea); background: var(--papel); color: var(--tinta); border-radius: 999px; padding: 6px 14px; font-size: .9rem; }
@@ -103,6 +104,17 @@ button { font: inherit; cursor: pointer; }
 .tarjeta-pie { margin-top: auto; padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .enlace { border: 0; background: none; padding: 0; color: var(--azul); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
 .vacio { text-align: center; padding: 40px 0; color: var(--tinta-suave); }
+.vacio-acciones { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
+
+.estado-horario { display: inline-block; font-family: system-ui, sans-serif; font-size: .8rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: #e6e9ef; color: #4a5568; vertical-align: middle; }
+.estado-horario.abierto { background: #d9f5e3; color: #0b6b34; }
+.estado-horario[hidden] { display: none; }
+.aviso-qr { background: var(--azul-claro); border-radius: 8px; padding: 8px 12px; margin-top: 10px; }
+
+.flotante { position: fixed; right: 18px; bottom: 18px; z-index: 30; display: inline-flex; align-items: center; gap: 8px; background: #128c4a; color: #fff; text-decoration: none; font-weight: 700; padding: 12px 18px; border-radius: 999px; box-shadow: 0 6px 20px rgba(0, 0, 0, .25); }
+.flotante:hover { background: #0e743d; }
+.flotante[hidden], .barra-lista[hidden] { display: none; }
+.barra-lista { display: none; }
 
 /* Cómo funciona */
 .pasos { list-style: none; counter-reset: paso; padding: 0; margin: 26px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
@@ -179,6 +191,21 @@ button { font: inherit; cursor: pointer; }
   .cartel { justify-self: center; }
   .buscador .boton { padding: 10px 14px; }
   .cajon { border-radius: 0; }
+  .filtros { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding: 2px 16px 8px; scrollbar-width: none; }
+  .filtros::-webkit-scrollbar { display: none; }
+  .ficha { flex: none; }
+  .cartel { width: 100%; border-width: 3px; padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+  .cartel img { display: none; }
+  .cartel .estado-horario { grid-column: 1 / -1; justify-self: center; margin-bottom: 4px; }
+  .cartel-titulo { font-size: 1.15rem; margin: 0; grid-row: 2; }
+  .cartel-dato { font-size: 1rem; grid-row: 3; }
+  .flotante { padding: 14px; }
+  .flotante span { display: none; }
+  .barra-lista { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 31; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 0; border-radius: 14px; background: var(--azul); color: #fff; padding: 14px 18px; box-shadow: 0 8px 24px rgba(0, 31, 77, .35); }
+  .barra-lista b { text-decoration: underline; text-underline-offset: 4px; }
+  .con-barra .flotante { bottom: 78px; }
+  .con-barra .tostada { bottom: 84px; }
+  .con-barra .pie { padding-bottom: 96px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

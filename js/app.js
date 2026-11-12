@@ -62,6 +62,17 @@
       ? N.horarios.map(function (h) { return esc(h.dias) + "<br>" + esc(h.horas); }).join("<br>") : pendiente;
     $("#cartelUrgencias").innerHTML = (N.urgencias || N.telefono) ? tel(N.urgencias || N.telefono) : pendiente;
 
+    var abierto = estaAbierto();
+    document.querySelectorAll("[data-estado-horario]").forEach(function (el) {
+      el.hidden = abierto === null;
+      el.textContent = abierto ? "Abierto ahora" : "Cerrado ahora";
+      el.classList.toggle("abierto", !!abierto);
+    });
+    if (N.whatsapp) {
+      $("#flotante").href = enlaceWhatsApp("Hola, quisiera información sobre sus estudios.");
+      $("#flotante").hidden = false;
+    }
+
     var acciones = "<p>¿Tienes dudas sobre un estudio o su preparación? Con gusto te orientamos.</p>";
     if (N.whatsapp) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera información sobre sus estudios.") + '">Escribir por WhatsApp</a>';
     if (N.whatsapp) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.") + '">Agendar toma a domicilio</a>';
@@ -79,6 +90,21 @@
       return "<div><b>" + esc(s.titulo) + "</b><p>" + esc(s.texto) + "</p></div>";
     }).join("");
     $("#listaIndicaciones").innerHTML = (N.indicaciones || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
+  }
+
+  // true / false según el horario; null si no hay horario estructurado.
+  function estaAbierto() {
+    var hs = (N.horarios || []).filter(function (h) { return h.abre && h.cierra && Array.isArray(h.diasSemana); });
+    if (!hs.length) return null;
+    var p = {};
+    try {
+      new Intl.DateTimeFormat("en-US", { timeZone: N.zonaHoraria || "America/Mexico_City", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+        .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+    } catch (err) { return null; }
+    var dia = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(p.weekday);
+    var ahora = Number(p.hour) * 60 + Number(p.minute);
+    var minutos = function (s) { var a = String(s).split(":"); return Number(a[0]) * 60 + Number(a[1] || 0); };
+    return hs.some(function (h) { return h.diasSemana.indexOf(dia) !== -1 && ahora >= minutos(h.abre) && ahora < minutos(h.cierra); });
   }
 
   function enlaceWhatsApp(texto) {
@@ -130,6 +156,10 @@
         "</article>";
     }).join("");
     $("#vacio").hidden = lista.length > 0;
+    if (!lista.length && N.whatsapp) {
+      $("#preguntar").href = enlaceWhatsApp("Hola, ¿realizan este estudio? " + estado.texto.trim());
+      $("#preguntar").hidden = false;
+    }
     $("#resumen").textContent = lista.length === ESTUDIOS.length
       ? ESTUDIOS.length + " estudios disponibles"
       : lista.length + " de " + ESTUDIOS.length + " estudios";
@@ -163,7 +193,7 @@
       "</div>";
     var d = $("#detalle");
     d.dataset.id = id;
-    if (!d.open) d.showModal();
+    abrirDialogo(d);
   }
 
   // ───────── Mi lista ─────────
@@ -202,12 +232,15 @@
   function pintarLista() {
     var sel = estudiosEnLista();
     $("#contador").textContent = sel.length;
+    $("#barraLista").hidden = !sel.length;
+    $("#barraTexto").textContent = sel.length + (sel.length === 1 ? " estudio en tu lista" : " estudios en tu lista");
+    document.body.classList.toggle("con-barra", sel.length > 0);
     if (!sel.length) {
       $("#listaCuerpo").innerHTML = '<p class="lista-vacia">Tu lista está vacía.<br>Agrega estudios desde el catálogo.</p>';
       $("#listaPie").innerHTML = "";
       return;
     }
-    $("#listaCuerpo").innerHTML = sel.map(function (e) {
+    $("#listaCuerpo").innerHTML = (estado.deQR ? '<p class="nota aviso-qr">Lista abierta desde un código QR.</p>' : "") + sel.map(function (e) {
       return '<div class="renglon"><div><b>' + esc(e.nombre) + "</b><small>" + esc(e.preparacion || "") + "</small></div>" +
         '<div class="renglon-lado"><button class="quitar" type="button" data-alternar="' + esc(e.id) + '">Quitar</button></div></div>';
     }).join("");
@@ -238,6 +271,30 @@
     if (d.open && d.dataset.id === id) abrirDetalle(id);
   }
 
+  // Abrir un diálogo deja una entrada en el historial para que el botón
+  // "Atrás" del celular lo cierre en lugar de salir de la página.
+  function abrirDialogo(d) {
+    if (d.open) return;
+    d.showModal();
+    try { history.pushState({ dialogo: d.id }, ""); } catch (err) { /* sin historial */ }
+  }
+  document.querySelectorAll("dialog").forEach(function (d) {
+    d.addEventListener("close", function () {
+      if (history.state && history.state.dialogo === d.id) history.back();
+    });
+  });
+  window.addEventListener("popstate", function () {
+    document.querySelectorAll("dialog[open]").forEach(function (d) { d.close(); });
+  });
+
+  function buscar(texto, desplazar) {
+    estado.texto = texto;
+    if ($("#buscar").value !== texto) $("#buscar").value = texto;
+    if ($("#buscar2").value !== texto) $("#buscar2").value = texto;
+    pintarCatalogo();
+    if (desplazar) $("#estudios").scrollIntoView();
+  }
+
   var temporizador;
   function avisar(texto) {
     var t = $("#tostada");
@@ -261,7 +318,7 @@
 
   // ───────── Eventos ─────────
   document.addEventListener("click", function (ev) {
-    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-sugerencia],[data-cerrar],#abrirLista,#copiarLista,#vaciarLista,#alternarQR");
+    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-sugerencia],[data-cerrar],#abrirLista,#barraLista,#copiarLista,#vaciarLista,#alternarQR,#limpiar");
     if (!t) {
       // Clic en el fondo oscuro cierra el diálogo.
       if (ev.target.tagName === "DIALOG") ev.target.close();
@@ -271,26 +328,33 @@
     else if (t.hasAttribute("data-ver")) abrirDetalle(t.getAttribute("data-ver"));
     else if (t.hasAttribute("data-cat")) { estado.categoria = t.getAttribute("data-cat"); pintarFiltros(); pintarCatalogo(); }
     else if (t.hasAttribute("data-sugerencia")) {
-      estado.texto = t.getAttribute("data-sugerencia");
-      $("#buscar").value = estado.texto;
-      pintarCatalogo();
-      $("#estudios").scrollIntoView();
+      estado.categoria = "";
+      pintarFiltros();
+      buscar(t.getAttribute("data-sugerencia"), true);
     }
+    else if (t.id === "limpiar") { estado.categoria = ""; pintarFiltros(); buscar("", false); }
     else if (t.hasAttribute("data-cerrar")) t.closest("dialog").close();
-    else if (t.id === "abrirLista") { pintarLista(); $("#lista").showModal(); }
+    else if (t.id === "abrirLista" || t.id === "barraLista") { pintarLista(); abrirDialogo($("#lista")); }
     else if (t.id === "copiarLista") copiar(textoLista());
     else if (t.id === "alternarQR") { estado.qrVisible = !estado.qrVisible; pintarLista(); }
     else if (t.id === "vaciarLista") { estado.lista = []; guardarLista(); pintarCatalogo(); pintarLista(); }
   });
 
-  $("#buscar").addEventListener("input", function (ev) { estado.texto = ev.target.value; pintarCatalogo(); });
-  $("#formBuscar").addEventListener("submit", function (ev) { ev.preventDefault(); $("#estudios").scrollIntoView(); });
+  $("#buscar").addEventListener("input", function (ev) { buscar(ev.target.value, false); });
+  $("#buscar2").addEventListener("input", function (ev) { buscar(ev.target.value, false); });
+  $("#formBuscar").addEventListener("submit", function (ev) { ev.preventDefault(); $("#buscar").blur(); $("#estudios").scrollIntoView(); });
 
   // Enlace del código QR: ?lista=BH,GLU abre la página con esa lista.
   var recibida = new URLSearchParams(location.search).get("lista");
   if (recibida) {
     var ids = recibida.split(",").filter(function (id, i, a) { return porId[id] && a.indexOf(id) === i; });
-    if (ids.length) estado.lista = ids;
+    if (ids.length) {
+      estado.lista = ids;
+      estado.deQR = true;
+      guardarLista();
+    }
+    // Se quita ?lista= de la dirección para que recargar no deshaga cambios.
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch (err) { /* sin historial */ }
   }
 
   pintarNegocio();
@@ -298,5 +362,5 @@
   pintarFiltros();
   pintarCatalogo();
   pintarLista();
-  if (recibida && estado.lista.length) $("#lista").showModal();
+  if (estado.deQR) abrirDialogo($("#lista"));
 })();

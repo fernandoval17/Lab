@@ -22,7 +22,9 @@ window.NEGOCIO = {
   mapaUrl: "https://maps.app.goo.gl/ro9jUFCHSbpLfC7u8",
 
   horarios: [
-    { dias: "Lunes a sábado", horas: "7:00 am a 2:30 pm" },
+    // diasSemana, abre y cierra sirven para mostrar "Abierto ahora" / "Cerrado ahora".
+    // Días: 0 = domingo, 1 = lunes … 6 = sábado. Horas en formato de 24 horas.
+    { dias: "Lunes a sábado", horas: "7:00 am a 2:30 pm", diasSemana: [1, 2, 3, 4, 5, 6], abre: "07:00", cierra: "14:30" },
   ],
 
   servicios: [
