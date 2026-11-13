@@ -197,6 +197,14 @@
     }).join("");
     $("#filtros").innerHTML = html;
 
+    // En celular, las categorías se eligen con un selector, para que se vean todas.
+    $("#categoriaSelect").innerHTML = '<option value="">Todas las categorías (' + TARJETAS.length + ")</option>" +
+      ORDEN_CATEGORIAS.map(function (c) {
+        var total = TARJETAS.filter(function (t) { return t.categorias.indexOf(c) !== -1; }).length;
+        return total ? '<option value="' + esc(c) + '">' + esc(c) + " (" + total + ")</option>" : "";
+      }).join("");
+    $("#categoriaSelect").value = estado.categoria;
+
     // Subgrupos (por ejemplo, tipos de infección) cuando la categoría elegida los tiene.
     var subs = estado.categoria ? subcategoriasDe(estado.categoria) : [];
     if (subs.indexOf(estado.subcategoria) === -1) estado.subcategoria = "";
@@ -533,7 +541,8 @@
 
   document.addEventListener("change", function (ev) {
     var t = ev.target;
-    if (t.id === "orden") { estado.orden = t.value; estado.limite = POR_PAGINA; pintarCatalogo(); }
+    if (t.id === "categoriaSelect") { estado.categoria = t.value; estado.subcategoria = ""; estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
+    else if (t.id === "orden") { estado.orden = t.value; estado.limite = POR_PAGINA; pintarCatalogo(); }
     else if (t.hasAttribute("data-variante")) {
       // Cambia la variante de una tarjeta y la repinta sin perder el foco del selector.
       var clave = t.getAttribute("data-variante");
