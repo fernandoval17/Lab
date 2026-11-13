@@ -124,14 +124,17 @@ button { font: inherit; cursor: pointer; }
 .cartel-acciones .boton { width: 100%; }
 .acciones-contacto[hidden] { display: none; }
 
-.ventajas { list-style: none; margin: 0 0 var(--e5); padding: 0; display: grid; gap: var(--e2); font-weight: 600; }
-.ventajas li { display: flex; align-items: center; gap: var(--e2); }
+/* Pasos de la portada: números en círculo unidos por una línea, como un flujo. */
+.ventajas { list-style: none; counter-reset: paso; margin: 0 0 var(--e5); padding: 0; display: grid; gap: var(--e4); font-weight: 600; }
+.ventajas li { position: relative; counter-increment: paso; display: flex; align-items: flex-start; gap: var(--e3); }
 .ventajas li[hidden] { display: none; }
 /* Servicio a domicilio: destacado aparte de los tres pasos. */
 .domicilio { max-width: 46ch; margin: 0 0 var(--e5); padding: var(--e3) var(--e4); background: #eceff4; border: 1px solid #dde2ea; border-radius: var(--radio); }
 .domicilio a { font-weight: 600; white-space: nowrap; }
 .domicilio a[hidden] { display: none; }
-.ventajas li::before { content: "✓"; flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--azul); color: #fff; font-size: var(--t-xs); display: grid; place-items: center; }
+.ventajas li::before { content: counter(paso); flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--azul); color: #fff; font-size: var(--t-sm); font-weight: 700; line-height: 1; display: grid; place-items: center; }
+/* Línea que une cada número con el siguiente. */
+.ventajas li:not(:last-child)::after { content: ""; position: absolute; left: 12px; top: 26px; bottom: calc(-1 * var(--e4)); width: 2px; background: var(--cielo); }
 .sugerencias-titulo { align-self: center; font-size: var(--t-sm); color: var(--tinta-suave); }
 .buscador { display: flex; align-items: center; gap: var(--e2); background: var(--papel); border: 1.5px solid var(--linea); border-radius: 999px; padding: var(--e1) var(--e2) var(--e1) var(--e4); box-shadow: var(--sombra); max-width: 620px; color: var(--tinta-suave); }
 .buscador:focus-within { border-color: var(--azul); }
