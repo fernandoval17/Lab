@@ -209,6 +209,16 @@ button { font: inherit; cursor: pointer; }
 
 .pie { background: #001f4d; color: #d5e2f7; padding: var(--e5) 0; font-size: var(--t-sm); }
 .pie b { color: #fff; }
+.pie a { color: #fff; }
+
+/* Aviso de privacidad */
+.boton-volver { margin-left: auto; }
+.legal { max-width: 70ch; }
+.legal h1 { font-size: var(--t-2xl); }
+.legal-fecha { margin: var(--e2) 0 var(--e5); color: var(--tinta-suave); font-size: var(--t-sm); }
+.legal h2 { font-size: var(--t-lg); line-height: 1.25; margin: var(--e6) 0 var(--e2); }
+.legal p + p, .legal ul + p, .legal p + ul { margin-top: var(--e3); }
+.legal ul { margin: 0; padding-left: var(--e5); display: grid; gap: var(--e2); }
 .pie-nota { margin-top: var(--e2); opacity: .75; font-size: var(--t-xs); max-width: 56ch; }
 
 /* Diálogos */
