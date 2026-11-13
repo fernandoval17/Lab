@@ -89,6 +89,16 @@
           <input id="buscar" type="search" placeholder="¿Qué estudio buscas?" aria-label="Buscar estudio" autocomplete="off">
         </div>
         <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoría"></div>
+        <div class="filtros subfiltros" id="subfiltros" role="group" aria-label="Filtrar por subgrupo" hidden></div>
+        <div class="opciones">
+          <label class="opcion-select opcion-orden"><span>Ordenar</span>
+            <select id="orden">
+              <option value="recomendado">Recomendado</option>
+              <option value="az">Nombre (A–Z)</option>
+              <option value="za">Nombre (Z–A)</option>
+            </select>
+          </label>
+        </div>
         <div class="rejilla" id="rejilla"></div>
         <div class="mas" id="mas" hidden><button class="boton" type="button" id="verMas">Ver más estudios</button></div>
         <div class="vacio" id="vacio" hidden>
