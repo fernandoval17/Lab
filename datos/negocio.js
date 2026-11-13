@@ -40,7 +40,7 @@ window.NEGOCIO = {
   indicaciones: [
     "Presenta la orden de tu médico si cuentas con ella.",
     "Si tu estudio requiere ayuno, puedes tomar agua natural.",
-    "Informa al personal si tomas algún medicamento.",
+    "Informa al personal si tomas algún medicamento o si tienes alguna enfermedad o padecimiento.",
     "Para muestras de orina o heces, usa frascos limpios y estériles.",
   ],
 };
