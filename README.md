@@ -29,11 +29,6 @@ gratuito hay que hacerlo público en **Settings → General → Change visibilit
 
 Cada archivo trae instrucciones al inicio. Puntos importantes:
 
-- **Que los cambios se vean de inmediato:** en `index.html` y `aviso-de-privacidad.html`,
-  los archivos de estilos, datos y scripts llevan `?v=20261113` al final. Después de editar
-  cualquiera de ellos, cambie ese número en las dos páginas (por ejemplo, a la fecha del día)
-  para que los navegadores descarguen la versión nueva en lugar de usar la guardada.
-
 - **Precios:** la página no muestra precios. El paciente arma su lista y la envía por
   WhatsApp para pedirlos, o muestra el código QR de su lista en el laboratorio.
 - **Código QR:** con la página publicada en internet, el QR abre la misma página con la
