@@ -23,12 +23,22 @@ gratuito hay que hacerlo público en **Settings → General → Change visibilit
 
 | Qué quiere cambiar | Archivo |
 | --- | --- |
-| Estudios y su preparación (226 estudios, tomados de la lista en Excel) | `datos/estudios.js` |
+| Estudios, su preparación, categorías y grupos (226 estudios, tomados de la lista en Excel) | `datos/estudios.js` |
 | Dirección, teléfono, WhatsApp, horarios, servicios | `datos/negocio.js` |
 | Texto del aviso de privacidad | `aviso-de-privacidad.html` |
 
 Cada archivo trae instrucciones al inicio. Puntos importantes:
 
+- **Categorías del catálogo:** están pensadas para el paciente ("Azúcar y diabetes",
+  "Riñón y vías urinarias", etc.). Su orden está en `CATEGORIAS_ESTUDIOS`, al inicio de
+  `datos/estudios.js`. Un estudio puede estar en varias: la primera de su lista
+  `categorias` es la principal. "Infecciones" tiene subgrupos (`subcategoria`).
+- **Variantes:** los estudios con varias versiones (por ejemplo, la química sanguínea de 3
+  a 45 elementos) comparten tarjeta con un selector. Se unen con el mismo `grupo`; el texto
+  de cada opción va en `variante`. Cada variante conserva su propio `id`.
+- **Filtros y orden:** además de la categoría, el catálogo filtra por tipo de muestra,
+  "Requiere ayuno" (estudios cuya preparación menciona ayuno) y "Solo paquetes" (los
+  marcados con `paquete: true`), y ordena por recomendado o por nombre.
 - **Precios:** la página no muestra precios. El paciente arma su lista y la envía por
   WhatsApp para pedirlos, o muestra el código QR de su lista en el laboratorio.
 - **Código QR:** con la página publicada en internet, el QR abre la misma página con la

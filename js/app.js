@@ -11,6 +11,8 @@
 
   var N = window.NEGOCIO || {};
   var ESTUDIOS = (window.ESTUDIOS || []).filter(function (e) { return e && e.nombre; });
+  var GRUPOS = window.GRUPOS_ESTUDIOS || {};
+  var SUBCATEGORIAS = window.SUBCATEGORIAS_ESTUDIOS || {};
   var CLAVE_LISTA = "staMargarita.lista";
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -30,12 +32,57 @@
     var id = String(e.id || e.clave || "").trim();
     if (!id || porId[id]) id = "e" + i;
     e.id = id;
-    e._busqueda = norm([e.nombre, e.clave, e.categoria, e.sinonimos, e.incluye].join(" "));
+    e.categorias = categoriasDe(e);
+    var prep = String(e.preparacion || "");
+    e._ayuno = /ayuno/i.test(prep) && !/no requiere ayuno/i.test(prep);
+    e._muestra = tipoDeMuestra(e.muestra);
+    e._busqueda = norm([e.nombre, e.clave, e.categorias.join(" "), e.subcategoria, GRUPOS[e.grupo], e.variante, e.sinonimos, e.incluye].join(" "));
     porId[id] = e;
   });
 
+  // Categorías de un estudio: la lista "categorias" o, en datos antiguos, el campo "categoria".
+  function categoriasDe(e) {
+    if (Array.isArray(e.categorias) && e.categorias.length) return e.categorias.map(String);
+    return [e.categoria || "Otros"];
+  }
+  // Tipo de muestra para el filtro: Sangre, Orina, Heces u Otra.
+  function tipoDeMuestra(m) {
+    m = norm(m);
+    if (/heces/.test(m)) return "Heces";
+    if (/orina/.test(m)) return "Orina";
+    if (/^sangre/.test(m)) return "Sangre";
+    return "Otra";
+  }
+
+  // Tarjetas del catálogo: una por estudio, salvo las variantes de un mismo grupo,
+  // que comparten tarjeta y se eligen con un selector.
+  var TARJETAS = [], tarjetaDeGrupo = Object.create(null);
+  ESTUDIOS.forEach(function (e) {
+    if (e.grupo && tarjetaDeGrupo[e.grupo]) { tarjetaDeGrupo[e.grupo].estudios.push(e); return; }
+    var t = {
+      clave: e.grupo ? "g:" + e.grupo : e.id,
+      titulo: e.grupo ? (GRUPOS[e.grupo] || e.nombre) : e.nombre,
+      grupo: e.grupo || "",
+      categorias: e.categorias,
+      subcategoria: e.subcategoria || "",
+      estudios: [e],
+      orden: TARJETAS.length
+    };
+    if (e.grupo) tarjetaDeGrupo[e.grupo] = t;
+    TARJETAS.push(t);
+  });
+
+  // Orden de las categorías: el de datos/estudios.js y, al final, cualquier otra que aparezca.
+  var ORDEN_CATEGORIAS = (window.CATEGORIAS_ESTUDIOS || []).map(String);
+  TARJETAS.forEach(function (t) {
+    t.categorias.forEach(function (c) { if (ORDEN_CATEGORIAS.indexOf(c) === -1) ORDEN_CATEGORIAS.push(c); });
+  });
+
   var POR_PAGINA = 24;
-  var estado = { texto: "", categoria: "", lista: leerLista(), qrVisible: false, limite: POR_PAGINA };
+  var estado = {
+    texto: "", categoria: "", subcategoria: "", muestra: "", ayuno: false, paquetes: false, orden: "recomendado",
+    variante: Object.create(null), lista: leerLista(), qrVisible: false, limite: POR_PAGINA
+  };
 
   function leerLista() {
     try {
@@ -138,30 +185,78 @@
   }
 
   // ───────── Catálogo ─────────
-  function categorias() {
-    var cuenta = {}, orden = [];
-    ESTUDIOS.forEach(function (e) {
-      var c = e.categoria || "Otros";
-      if (!cuenta[c]) { cuenta[c] = 0; orden.push(c); }
-      cuenta[c]++;
+  function ficha(atributo, valor, texto, activa, total) {
+    return '<button class="ficha" type="button" ' + atributo + '="' + esc(valor) + '" aria-pressed="' + activa + '">' +
+      esc(texto) + (total == null ? "" : "<small>" + total + "</small>") + "</button>";
+  }
+
+  // Subgrupos de una categoría: solo los definidos para ella en SUBCATEGORIAS_ESTUDIOS
+  // (un estudio de Riñón que también es infección no lleva los subgrupos a Riñón).
+  function subcategoriasDe(c) {
+    return (SUBCATEGORIAS[c] || []).filter(function (sc) {
+      return TARJETAS.some(function (t) { return t.subcategoria === sc && t.categorias.indexOf(c) !== -1; });
     });
-    return orden.map(function (c) { return { nombre: c, total: cuenta[c] }; });
   }
 
   function pintarFiltros() {
-    var html = '<button class="ficha" type="button" data-cat="" aria-pressed="' + (estado.categoria === "") + '">Todos<small>' + ESTUDIOS.length + "</small></button>";
-    html += categorias().map(function (c) {
-      return '<button class="ficha" type="button" data-cat="' + esc(c.nombre) + '" aria-pressed="' + (estado.categoria === c.nombre) + '">' + esc(c.nombre) + "<small>" + c.total + "</small></button>";
+    var html = ficha("data-cat", "", "Todos", estado.categoria === "", TARJETAS.length);
+    html += ORDEN_CATEGORIAS.map(function (c) {
+      var total = TARJETAS.filter(function (t) { return t.categorias.indexOf(c) !== -1; }).length;
+      return total ? ficha("data-cat", c, c, estado.categoria === c, total) : "";
     }).join("");
     $("#filtros").innerHTML = html;
+
+    // Subgrupos (por ejemplo, tipos de infección) cuando la categoría elegida los tiene.
+    var subs = estado.categoria ? subcategoriasDe(estado.categoria) : [];
+    if (subs.indexOf(estado.subcategoria) === -1) estado.subcategoria = "";
+    $("#subfiltros").hidden = !subs.length;
+    $("#subfiltros").innerHTML = subs.length ? ficha("data-subcat", "", "Todas", estado.subcategoria === "", null) + subs.map(function (sc) {
+      var total = TARJETAS.filter(function (t) { return t.subcategoria === sc && t.categorias.indexOf(estado.categoria) !== -1; }).length;
+      return ficha("data-subcat", sc, sc, estado.subcategoria === sc, total);
+    }).join("") : "";
+
+    document.querySelectorAll("[data-opcion]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(!!estado[b.getAttribute("data-opcion")]));
+    });
+    $("#filtroMuestra").value = estado.muestra;
+    $("#orden").value = estado.orden;
   }
 
+  function pasaFiltros(e, palabras) {
+    if (estado.muestra && e._muestra !== estado.muestra) return false;
+    if (estado.ayuno && !e._ayuno) return false;
+    if (estado.paquetes && !e.paquete) return false;
+    return palabras.every(function (p) { return e._busqueda.indexOf(p) !== -1; });
+  }
+
+  // Tarjetas que cumplen todos los filtros, cada una con sus variantes visibles, ya ordenadas.
   function filtrados() {
     var palabras = norm(estado.texto).split(/\s+/).filter(Boolean);
-    return ESTUDIOS.filter(function (e) {
-      if (estado.categoria && (e.categoria || "Otros") !== estado.categoria) return false;
-      return palabras.every(function (p) { return e._busqueda.indexOf(p) !== -1; });
+    var lista = [];
+    TARJETAS.forEach(function (t) {
+      if (estado.categoria && t.categorias.indexOf(estado.categoria) === -1) return;
+      if (estado.subcategoria && t.subcategoria !== estado.subcategoria) return;
+      var visibles = t.estudios.filter(function (e) { return pasaFiltros(e, palabras); });
+      if (visibles.length) lista.push({ t: t, estudios: visibles });
     });
+    if (estado.orden === "az" || estado.orden === "za") {
+      var signo = estado.orden === "az" ? 1 : -1;
+      lista.sort(function (a, b) { return signo * a.t.titulo.localeCompare(b.t.titulo, "es", { sensitivity: "base" }); });
+    } else {
+      // Recomendado: por categoría principal. Con una categoría elegida, primero su subgrupo
+      // (si tiene) y luego los estudios que la tienen como principal antes que los que la comparten.
+      var cat = estado.categoria, subs = cat ? subcategoriasDe(cat) : [];
+      var clave = function (t) {
+        if (!cat) return [ORDEN_CATEGORIAS.indexOf(t.categorias[0]), 0];
+        var sub = subs.indexOf(t.subcategoria);
+        return [sub === -1 ? subs.length : sub, t.categorias[0] === cat ? 0 : 1];
+      };
+      lista.sort(function (a, b) {
+        var ka = clave(a.t), kb = clave(b.t);
+        return ka[0] - kb[0] || ka[1] - kb[1] || a.t.orden - b.t.orden;
+      });
+    }
+    return lista;
   }
 
   function botonAgregar(e, extra) {
@@ -169,19 +264,41 @@
     return '<button class="boton boton-chico ' + (esta ? "agregado " : "boton-primario ") + (extra || "") + '" type="button" data-alternar="' + esc(e.id) + '" aria-pressed="' + esta + '">' + (esta ? "✓ En mi lista" : "Agregar") + "</button>";
   }
 
+  // Variante elegida de una tarjeta (la primera visible si no se ha elegido otra).
+  function estudioElegido(item) {
+    var elegido = estado.variante[item.t.clave];
+    return item.estudios.filter(function (e) { return e.id === elegido; })[0] || item.estudios[0];
+  }
+
+  function htmlTarjeta(item) {
+    var t = item.t, e = estudioElegido(item);
+    var etiqueta = estado.categoria && t.categorias.indexOf(estado.categoria) !== -1 ? estado.categoria : t.categorias[0];
+    var selector = "";
+    if (t.grupo && item.estudios.length > 1) {
+      selector = '<label class="variante"><span>Opción</span><select data-variante="' + esc(t.clave) + '" aria-label="Opción de ' + esc(t.titulo) + '">' +
+        item.estudios.map(function (v) {
+          return '<option value="' + esc(v.id) + '"' + (v.id === e.id ? " selected" : "") + ">" + esc(v.variante || v.nombre) + "</option>";
+        }).join("") + "</select></label>";
+    } else if (t.grupo && e.variante) {
+      selector = '<p class="variante"><span>Opción</span>' + esc(e.variante) + "</p>";
+    }
+    var meta = [e.muestra, e._ayuno ? "Requiere ayuno" : "", e.paquete ? "Paquete" : ""].filter(Boolean)
+      .map(function (m) { return "<span>" + esc(m) + "</span>"; }).join("");
+    return '<article class="tarjeta" data-tarjeta="' + esc(t.clave) + '">' +
+      '<span class="etiqueta">' + esc(etiqueta) + "</span>" +
+      '<h3><button type="button" data-ver="' + esc(e.id) + '">' + esc(t.titulo) + "</button></h3>" +
+      selector +
+      '<div class="meta">' + meta + "</div>" +
+      '<div class="tarjeta-pie"><button class="enlace" type="button" data-ver="' + esc(e.id) + '">Ver detalles</button>' + botonAgregar(e) + "</div>" +
+      "</article>";
+  }
+
+  var ultimaLista = [];
   function pintarCatalogo() {
     var lista = filtrados();
+    ultimaLista = lista;
     var visibles = lista.slice(0, estado.limite);
-    $("#rejilla").innerHTML = visibles.map(function (e) {
-      var meta = [e.muestra].filter(Boolean)
-        .map(function (m) { return "<span>" + esc(m) + "</span>"; }).join("");
-      return '<article class="tarjeta">' +
-        '<span class="etiqueta">' + esc(e.categoria || "Otros") + "</span>" +
-        '<h3><button type="button" data-ver="' + esc(e.id) + '">' + esc(e.nombre) + "</button></h3>" +
-        '<div class="meta">' + meta + "</div>" +
-        '<div class="tarjeta-pie"><button class="enlace" type="button" data-ver="' + esc(e.id) + '">Ver detalles</button>' + botonAgregar(e) + "</div>" +
-        "</article>";
-    }).join("");
+    $("#rejilla").innerHTML = visibles.map(htmlTarjeta).join("");
     var restantes = lista.length - visibles.length;
     $("#mas").hidden = restantes <= 0;
     $("#verMas").textContent = "Ver más estudios (" + restantes + " restantes)";
@@ -190,9 +307,9 @@
       $("#preguntar").href = enlaceWhatsApp("Hola, ¿realizan este estudio? " + estado.texto.trim());
       $("#preguntar").hidden = false;
     }
-    $("#resumen").textContent = lista.length === ESTUDIOS.length
-      ? ESTUDIOS.length + " estudios disponibles"
-      : lista.length + " de " + ESTUDIOS.length + " estudios";
+    $("#resumen").textContent = lista.length === TARJETAS.length
+      ? TARJETAS.length + " estudios disponibles"
+      : lista.length + " de " + TARJETAS.length + " estudios";
   }
 
   function pintarSugerencias() {
@@ -212,7 +329,7 @@
     var incluye = String(e.incluye || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
     $("#detalleCuerpo").innerHTML =
       '<div class="detalle">' +
-        '<div class="detalle-cabeza"><div><span class="etiqueta">' + esc(e.categoria || "Otros") + '</span><h2 id="detalleTitulo">' + esc(e.nombre) + "</h2></div>" +
+        '<div class="detalle-cabeza"><div><span class="etiqueta">' + esc(e.categorias[0]) + '</span><h2 id="detalleTitulo">' + esc(e.nombre) + "</h2></div>" +
         '<button class="cerrar" type="button" data-cerrar aria-label="Cerrar">×</button></div>' +
         (e.descripcion ? "<p>" + esc(e.descripcion) + "</p>" : "") +
         (e.muestra ? '<dl class="detalle-datos">' + dato("Muestra", e.muestra) + "</dl>" : "") +
@@ -333,7 +450,7 @@
     estado.limite = POR_PAGINA;
     if ($("#buscar").value !== texto) $("#buscar").value = texto;
     // Si la categoría elegida no tiene coincidencias, se busca en todo el catálogo.
-    if (estado.categoria && !filtrados().length) { estado.categoria = ""; pintarFiltros(); }
+    if ((estado.categoria || estado.subcategoria) && !filtrados().length) { estado.categoria = ""; estado.subcategoria = ""; pintarFiltros(); }
     pintarCatalogo();
     if (desplazar) $("#estudios").scrollIntoView();
   }
@@ -391,7 +508,7 @@
 
   // ───────── Eventos ─────────
   document.addEventListener("click", function (ev) {
-    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-sugerencia],[data-cerrar],#abrirLista,#barraLista,#copiarLista,#vaciarLista,#alternarQR,#limpiar,#verMas");
+    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-subcat],[data-opcion],[data-sugerencia],[data-cerrar],#abrirLista,#barraLista,#copiarLista,#vaciarLista,#alternarQR,#limpiar,#verMas");
     if (!t) {
       // Clic en el fondo oscuro cierra el diálogo.
       if (ev.target.tagName === "DIALOG") ev.target.close();
@@ -399,7 +516,9 @@
     }
     if (t.hasAttribute("data-alternar")) alternar(t.getAttribute("data-alternar"));
     else if (t.hasAttribute("data-ver")) abrirDetalle(t.getAttribute("data-ver"));
-    else if (t.hasAttribute("data-cat")) { estado.categoria = t.getAttribute("data-cat"); estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
+    else if (t.hasAttribute("data-cat")) { estado.categoria = t.getAttribute("data-cat"); estado.subcategoria = ""; estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
+    else if (t.hasAttribute("data-subcat")) { estado.subcategoria = t.getAttribute("data-subcat"); estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
+    else if (t.hasAttribute("data-opcion")) { var o = t.getAttribute("data-opcion"); estado[o] = !estado[o]; estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
     else if (t.id === "verMas") {
       var antes = estado.limite;
       estado.limite += POR_PAGINA;
@@ -410,10 +529,15 @@
     }
     else if (t.hasAttribute("data-sugerencia")) {
       estado.categoria = "";
+      estado.subcategoria = "";
       pintarFiltros();
       buscar(t.getAttribute("data-sugerencia"), true);
     }
-    else if (t.id === "limpiar") { estado.categoria = ""; pintarFiltros(); buscar("", false); }
+    else if (t.id === "limpiar") {
+      estado.categoria = ""; estado.subcategoria = ""; estado.muestra = ""; estado.ayuno = false; estado.paquetes = false;
+      pintarFiltros();
+      buscar("", false);
+    }
     else if (t.hasAttribute("data-cerrar")) t.closest("dialog").close();
     else if (t.id === "abrirLista" || t.id === "barraLista") { pintarLista(); abrirDialogo($("#lista")); }
     else if (t.id === "copiarLista") copiar(textoLista());
@@ -422,6 +546,24 @@
   });
 
   $("#buscar").addEventListener("input", function (ev) { buscar(ev.target.value, false); });
+
+  document.addEventListener("change", function (ev) {
+    var t = ev.target;
+    if (t.id === "filtroMuestra") { estado.muestra = t.value; estado.limite = POR_PAGINA; pintarCatalogo(); }
+    else if (t.id === "orden") { estado.orden = t.value; estado.limite = POR_PAGINA; pintarCatalogo(); }
+    else if (t.hasAttribute("data-variante")) {
+      // Cambia la variante de una tarjeta y la repinta sin perder el foco del selector.
+      var clave = t.getAttribute("data-variante");
+      estado.variante[clave] = t.value;
+      var item = ultimaLista.filter(function (i) { return i.t.clave === clave; })[0];
+      var tarjeta = t.closest(".tarjeta");
+      if (!item || !tarjeta) return;
+      tarjeta.insertAdjacentHTML("afterend", htmlTarjeta(item));
+      var nueva = tarjeta.nextElementSibling;
+      tarjeta.remove();
+      nueva.querySelector("[data-variante]").focus({ preventScroll: true });
+    }
+  });
 
   // Enlace del código QR: #lista=BH,GLU abre la página con esa lista. Va después
   // de "#" para que los estudios del paciente nunca se envíen al servidor.
