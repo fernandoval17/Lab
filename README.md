@@ -34,8 +34,7 @@ Cada archivo trae instrucciones al inicio. Puntos importantes:
   lista del paciente. Sin publicar, el QR contiene la lista en texto.
 - **WhatsApp:** el número está en `whatsapp`, dentro de `datos/negocio.js`; lo usan los
   botones "Escribir por WhatsApp" y "Cotizar por WhatsApp".
-- **Datos de contacto:** el teléfono, la dirección, el horario y el correo también están
-  escritos en `index.html`, para que se vean aunque el navegador no ejecute JavaScript.
-  Si cambian, actualícelos en los dos archivos.
+- **Datos de contacto:** teléfono, WhatsApp, dirección, horario, correo y redes se cambian
+  solo en `datos/negocio.js`; la página los toma de ahí en todas sus secciones.
 - **Aviso amarillo:** cuando la información ya esté revisada, cambie
   `catalogoPreliminar` a `false` en `datos/negocio.js` para ocultarlo.

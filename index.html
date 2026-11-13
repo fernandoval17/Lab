@@ -23,6 +23,7 @@
 <body>
   <a class="saltar" href="#estudios">Ir al catálogo</a>
 
+  <noscript><div class="aviso">Para ver el catálogo de estudios y los datos de contacto, active JavaScript en su navegador.</div></noscript>
   <div class="aviso" id="aviso" hidden>
     Catálogo preliminar: la lista de estudios está por confirmar.
   </div>
@@ -63,9 +64,9 @@
           <img src="img/logo.png" alt="" width="215" height="83">
           <p class="estado-horario" data-estado-horario hidden></p>
           <p class="cartel-titulo">Horario</p>
-          <p class="cartel-dato" id="cartelHorario">Lunes a sábado<br>7:00 am a 2:30 pm</p>
+          <p class="cartel-dato" id="cartelHorario"></p>
           <p class="cartel-titulo">Urgencias</p>
-          <p class="cartel-dato" id="cartelUrgencias"><a href="tel:3861219588">386 121 9588</a></p>
+          <p class="cartel-dato" id="cartelUrgencias"></p>
           <div class="cartel-ayuda" id="ayuda" hidden>
             <p>¿Tienes dudas sobre un estudio o su preparación? Con gusto te orientamos.</p>
             <div class="cartel-acciones" id="ayudaAcciones"></div>
@@ -87,7 +88,6 @@
         <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoría"></div>
         <div class="rejilla" id="rejilla"></div>
         <div class="mas" id="mas" hidden><button class="boton" type="button" id="verMas">Ver más estudios</button></div>
-        <noscript><p class="vacio">Para ver el catálogo active JavaScript en su navegador, o escríbanos por <a href="https://wa.me/523861219588">WhatsApp</a> o llame al <a href="tel:3861219588">386 121 9588</a>.</p></noscript>
         <div class="vacio" id="vacio" hidden>
           <p>No encontramos estudios con esa búsqueda. Prueba con otro nombre o pregúntanos: es posible que sí lo realicemos.</p>
           <div class="vacio-acciones">
@@ -125,10 +125,10 @@
         <div>
           <h2>Visítanos</h2>
           <dl class="datos">
-            <div><dt>Dirección</dt><dd id="datoDireccion">Aldama 559-3, Col. Revolución, C.P. 46500, Etzatlán, Jalisco</dd></div>
-            <div><dt>Horario</dt><dd><span id="datoHorario">Lunes a sábado: 7:00 am a 2:30 pm</span> <span class="estado-horario" data-estado-horario hidden></span></dd></div>
-            <div><dt>Teléfono y urgencias</dt><dd id="datoTelefono"><a href="tel:3861219588">386 121 9588</a></dd></div>
-            <div><dt>Correo</dt><dd id="datoCorreo"><a href="mailto:info@laboratoriostamargarita.com">info@laboratoriostamargarita.com</a></dd></div>
+            <div><dt>Dirección</dt><dd id="datoDireccion"></dd></div>
+            <div><dt>Horario</dt><dd><span id="datoHorario"></span> <span class="estado-horario" data-estado-horario hidden></span></dd></div>
+            <div><dt>Teléfono y urgencias</dt><dd id="datoTelefono"></dd></div>
+            <div><dt>Correo</dt><dd id="datoCorreo"></dd></div>
           </dl>
         </div>
         <div class="acciones-contacto" id="accionesContacto"></div>
