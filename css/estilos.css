@@ -129,10 +129,6 @@ button { font: inherit; cursor: pointer; }
 .ventajas { list-style: none; counter-reset: paso; margin: 0 0 var(--e5); padding: 0; display: grid; gap: var(--e4); font-weight: 600; }
 .ventajas li { position: relative; counter-increment: paso; display: flex; align-items: flex-start; gap: var(--e3); }
 .ventajas li[hidden] { display: none; }
-/* Servicio a domicilio: destacado aparte de los tres pasos. */
-.domicilio { max-width: 46ch; margin: 0 0 var(--e5); padding: var(--e3) var(--e4); background: #eceff4; border: 1px solid #dde2ea; border-radius: var(--radio); }
-.domicilio a { font-weight: 600; white-space: nowrap; }
-.domicilio a[hidden] { display: none; }
 .ventajas li::before { content: counter(paso); flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--azul); color: #fff; font-size: var(--t-sm); font-weight: 700; line-height: 1; display: grid; place-items: center; }
 /* Línea que une cada número con el siguiente. */
 .ventajas li:not(:last-child)::after { content: ""; position: absolute; left: 12px; top: 26px; bottom: calc(-1 * var(--e4)); width: 2px; background: var(--cielo); }
@@ -324,7 +320,6 @@ dialog .tostada { top: 14px; bottom: auto !important; }
   .sobretitulo-lugar { display: none; }
   .portada-texto { font-size: var(--t-base); margin: var(--e3) 0 0; }
   .ventajas { margin: var(--e3) 0 0; }
-  .domicilio { margin: var(--e4) 0 0; max-width: none; }
   .cartel { justify-self: center; width: 100%; border-width: 2px; border-radius: 18px; box-shadow: 0 0 0 5px rgba(0, 74, 173, .08), 0 12px 28px rgba(0, 51, 122, .12); padding: var(--e3) var(--e3) var(--e4); display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--e3); }
   .cartel .estado-horario { grid-column: 1 / -1; justify-self: center; margin-bottom: var(--e1); }
   .cartel-titulo, .cartel-dato + .cartel-titulo { margin: 0 0 var(--e1); grid-row: 2; }
@@ -362,7 +357,7 @@ dialog .tostada { top: 14px; bottom: auto !important; }
   .cerrar { width: 44px; height: 44px; }
   .marca { min-height: 44px; }
   .tarjeta h3 button { display: block; padding: 11px 0; margin: -11px 0; }
-  .cartel-dato a, .datos a, .pie a, .redes a, .domicilio a, .detalle a { display: inline-block; padding: 12px 0; margin: -12px 0; }
+  .cartel-dato a, .datos a, .pie a, .redes a, .detalle a { display: inline-block; padding: 12px 0; margin: -12px 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

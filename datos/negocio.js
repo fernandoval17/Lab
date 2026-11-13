@@ -33,9 +33,6 @@ window.NEGOCIO = {
   // Formas de pago (aparece en "Visítanos"). Vacío = no se muestra.
   pagos: "Aceptamos pago con tarjeta.",
 
-  // Zona donde se toman muestras a domicilio (aparece en el recuadro de la portada).
-  zonaDomicilio: "Etzatlán",
-
   // Recuadros de la sección "Servicios". Vacío = la sección no se muestra.
   // Ej. { titulo: "Toma de muestras a domicilio", texto: "Agenda tu cita por WhatsApp." },
   servicios: [],

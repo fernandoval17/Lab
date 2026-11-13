@@ -114,10 +114,6 @@
     pintarEstadoHorario();
     setInterval(pintarEstadoHorario, 60000);
     if (N.whatsapp) {
-      $("#domicilioEnlace").href = enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.");
-      $("#domicilioEnlace").hidden = false;
-    }
-    if (N.whatsapp) {
       $("#flotante").href = enlaceWhatsApp("Hola, quisiera información sobre sus estudios.");
       $("#flotante").hidden = false;
     }
