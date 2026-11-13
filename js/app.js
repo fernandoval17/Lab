@@ -551,6 +551,28 @@
 
   $("#buscar").addEventListener("input", function (ev) { buscar(ev.target.value, false); });
 
+  // ───────── Menú en celular ─────────
+  var botonMenu = $("#botonMenu"), menu = $("#menu");
+  function alternarMenu(abrir) {
+    menu.classList.toggle("abierto", abrir);
+    botonMenu.setAttribute("aria-expanded", String(abrir));
+    botonMenu.setAttribute("aria-label", abrir ? "Cerrar menú" : "Abrir menú");
+  }
+  botonMenu.addEventListener("click", function () {
+    var abrir = botonMenu.getAttribute("aria-expanded") !== "true";
+    alternarMenu(abrir);
+    if (abrir) menu.querySelector("a").focus();
+  });
+  // Se cierra al elegir una sección, al tocar fuera, con Escape o al pasar a pantalla grande.
+  menu.addEventListener("click", function (ev) { if (ev.target.closest("a")) alternarMenu(false); });
+  document.addEventListener("click", function (ev) {
+    if (menu.classList.contains("abierto") && !ev.target.closest("#menu, #botonMenu")) alternarMenu(false);
+  });
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape" && menu.classList.contains("abierto")) { alternarMenu(false); botonMenu.focus(); }
+  });
+  window.addEventListener("resize", function () { if (innerWidth > 820 && menu.classList.contains("abierto")) alternarMenu(false); });
+
   // Buscador de la portada: lleva la búsqueda al catálogo y baja hasta los resultados.
   $("#buscarPortadaForm").addEventListener("submit", function (ev) {
     ev.preventDefault();
