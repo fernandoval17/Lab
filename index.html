@@ -50,18 +50,27 @@
     <section class="portada">
       <div class="contenedor portada-fila">
         <div>
-          <p class="sobretitulo">Análisis clínicos en Etzatlán, Jalisco</p>
-          <h1>¿Qué estudio necesitas?</h1>
-          <div class="buscador" role="search">
-            <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.3 4.2-1.4 1.4-4.3-4.2A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z" fill="currentColor"/></svg>
-            <input id="buscar" type="search" placeholder="Ej. perfil tiroideo" aria-label="Buscar estudio" autocomplete="off">
-          </div>
+          <p class="sobretitulo">Análisis clínicos y especializados<span class="sobretitulo-lugar"> · Etzatlán, Jalisco</span></p>
+          <h1>Estudios de laboratorio para <em>cuidar tu salud</em></h1>
+          <p class="portada-texto">Somos tu laboratorio en Etzatlán.</p>
+          <ul class="ventajas">
+            <li>Busca tu estudio y revisa cómo prepararte</li>
+            <li>Cotiza por WhatsApp</li>
+            <li>Tomamos tus muestras a domicilio</li>
+          </ul>
           <div class="sugerencias" id="sugerencias" aria-label="Estudios frecuentes"></div>
         </div>
-        <aside class="info" aria-label="Horario y contacto">
+        <aside class="cartel" aria-label="Horario, urgencias y contacto">
+          <img src="img/logo.png" alt="" width="215" height="83">
           <p class="estado-horario" data-estado-horario hidden></p>
-          <p id="infoHorario"></p>
-          <p class="info-contacto" id="infoContacto"></p>
+          <p class="cartel-titulo">Horario</p>
+          <p class="cartel-dato" id="cartelHorario"></p>
+          <p class="cartel-titulo">Urgencias</p>
+          <p class="cartel-dato" id="cartelUrgencias"></p>
+          <div class="cartel-ayuda" id="ayuda" hidden>
+            <p>¿Tienes dudas sobre un estudio o su preparación? Con gusto te orientamos.</p>
+            <div class="cartel-acciones" id="ayudaAcciones"></div>
+          </div>
         </aside>
       </div>
     </section>
@@ -69,8 +78,12 @@
     <section class="seccion" id="estudios">
       <div class="contenedor">
         <div class="seccion-cabeza">
-          <h2>Catálogo</h2>
+          <h2>Catálogo de estudios</h2>
           <p id="resumen" aria-live="polite"></p>
+        </div>
+        <div class="buscador buscador-catalogo" role="search">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.3 4.2-1.4 1.4-4.3-4.2A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z" fill="currentColor"/></svg>
+          <input id="buscar" type="search" placeholder="¿Qué estudio buscas?" aria-label="Buscar estudio" autocomplete="off">
         </div>
         <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoría"></div>
         <div class="rejilla" id="rejilla"></div>
