@@ -45,6 +45,10 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 84px; scrollbar-gutter: stable; }
+/* En celulares el lienzo usa el azul del pie: al rebotar el scroll o bajo la barra de Safari
+   se ve este color, y así no aparece una franja clara debajo del pie. Solo en pantallas táctiles,
+   porque en computadora el espacio de la barra de scroll también tomaría este color. */
+@media (pointer: coarse) { html { background: #001f4d; } }
 /* Con una ventana abierta, la página de fondo no se desplaza. */
 html:has(dialog[open]) { overflow: hidden; }
 body {
@@ -54,6 +58,7 @@ body {
   line-height: 1.55;
   color: var(--tinta);
   background: var(--crema);
+  min-height: 100vh;
 }
 h1, h2, h3 { font-family: "League Spartan", "Century Gothic", "Trebuchet MS", system-ui, sans-serif; line-height: 1.1; margin: 0; font-weight: 700; letter-spacing: -.01em; }
 h2 { font-size: var(--t-2xl); }
