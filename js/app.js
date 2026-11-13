@@ -543,6 +543,17 @@
 
   $("#buscar").addEventListener("input", function (ev) { buscar(ev.target.value, false); });
 
+  // Buscador de la portada: lleva la búsqueda al catálogo y baja hasta los resultados.
+  $("#buscarPortadaForm").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var campo = $("#buscarPortada");
+    estado.categoria = "";
+    estado.subcategoria = "";
+    pintarFiltros();
+    buscar(campo.value.trim(), true);
+    campo.blur();
+  });
+
   document.addEventListener("change", function (ev) {
     var t = ev.target;
     if (t.id === "categoriaSelect") { estado.categoria = t.value; estado.subcategoria = ""; estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
