@@ -34,7 +34,7 @@
     porId[id] = e;
   });
 
-  var POR_PAGINA = 30;
+  var POR_PAGINA = 24;
   var estado = { texto: "", categoria: "", lista: leerLista(), qrVisible: false, limite: POR_PAGINA };
 
   function leerLista() {
@@ -55,7 +55,6 @@
     });
     if (N.nombre) document.title = N.nombre + " · Análisis clínicos en " + (N.ubicacionCorta || "Jalisco");
     $("#aviso").hidden = !N.catalogoPreliminar;
-    if (ESTUDIOS.length) $("#totalEstudios").textContent = ESTUDIOS.length;
 
     var pendiente = '<span class="pendiente">Por confirmar</span>';
     $("#datoDireccion").innerHTML = N.direccion ? esc(N.direccion) : esc(N.ubicacionCorta || "") + " · " + pendiente;
@@ -91,7 +90,7 @@
 
     // Sucursal (final de la página): cómo llegar y redes
     var acciones = "";
-    if (N.mapaUrl) acciones += '<a class="boton boton-primario" target="_blank" rel="noopener" href="' + esc(N.mapaUrl) + '">Cómo llegar</a>';
+    if (N.mapaUrl) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + esc(N.mapaUrl) + '">Cómo llegar</a>';
     var redes = [["facebook", "Facebook"], ["instagram", "Instagram"]].filter(function (r) { return N[r[0]]; }).map(function (r) {
       return '<a target="_blank" rel="noopener" href="' + esc(N[r[0]]) + '">' + r[1] + "</a>";
     });
@@ -102,7 +101,7 @@
     $("#servicios").innerHTML = (N.servicios || []).map(function (s) {
       return "<div><b>" + esc(s.titulo) + "</b><p>" + esc(s.texto) + "</p></div>";
     }).join("");
-    $("#serviciosSeccion").hidden = !(N.servicios || []).length;
+    $("#servicios").hidden = !(N.servicios || []).length;
     $("#listaIndicaciones").innerHTML = (N.indicaciones || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
   }
 
@@ -163,31 +162,21 @@
 
   function botonAgregar(e, extra) {
     var esta = estado.lista.indexOf(e.id) !== -1;
-    return '<button class="boton boton-chico ' + (esta ? "agregado" : (extra || "")) + '" type="button" data-alternar="' + esc(e.id) + '" aria-pressed="' + esta + '">' + (esta ? "✓ Agregado" : "Agregar") + "</button>";
+    return '<button class="boton boton-chico ' + (esta ? "agregado " : "boton-primario ") + (extra || "") + '" type="button" data-alternar="' + esc(e.id) + '" aria-pressed="' + esta + '">' + (esta ? "✓ En mi lista" : "Agregar") + "</button>";
   }
 
-  // Una fila por estudio, agrupadas por categoría. El nombre abre el detalle;
-  // junto a él van la muestra y la preparación, que es lo que la gente busca.
   function pintarCatalogo() {
     var lista = filtrados();
     var visibles = lista.slice(0, estado.limite);
-    var totales = {}, grupos = [], porCategoria = {};
-    lista.forEach(function (e) { var c = e.categoria || "Otros"; totales[c] = (totales[c] || 0) + 1; });
-    visibles.forEach(function (e) {
-      var c = e.categoria || "Otros";
-      if (!porCategoria[c]) { porCategoria[c] = []; grupos.push(c); }
-      porCategoria[c].push(e);
-    });
-    $("#rejilla").innerHTML = grupos.map(function (c) {
-      return '<section class="grupo"><h3>' + esc(c) + " <small>" + totales[c] + "</small></h3>" +
-        '<ul class="filas">' + porCategoria[c].map(function (e) {
-          var meta = [e.muestra, e.preparacion].filter(Boolean).join(" · ");
-          return '<li class="fila">' +
-            '<button class="fila-info" type="button" data-ver="' + esc(e.id) + '">' +
-              '<span class="fila-nombre">' + esc(e.nombre) + "</span>" +
-              (meta ? '<span class="fila-meta">' + esc(meta) + "</span>" : "") +
-            "</button>" + botonAgregar(e) + "</li>";
-        }).join("") + "</ul></section>";
+    $("#rejilla").innerHTML = visibles.map(function (e) {
+      var meta = [e.muestra].filter(Boolean)
+        .map(function (m) { return "<span>" + esc(m) + "</span>"; }).join("");
+      return '<article class="tarjeta">' +
+        '<span class="etiqueta">' + esc(e.categoria || "Otros") + "</span>" +
+        '<h3><button type="button" data-ver="' + esc(e.id) + '">' + esc(e.nombre) + "</button></h3>" +
+        '<div class="meta">' + meta + "</div>" +
+        '<div class="tarjeta-pie"><button class="enlace" type="button" data-ver="' + esc(e.id) + '">Ver detalles</button>' + botonAgregar(e) + "</div>" +
+        "</article>";
     }).join("");
     var restantes = lista.length - visibles.length;
     $("#mas").hidden = restantes <= 0;
@@ -227,7 +216,7 @@
           : "Pregúntanos si este estudio requiere ayuno u otra preparación." +
             (N.whatsapp ? ' <a target="_blank" rel="noopener" href="' + esc(enlaceWhatsApp("Hola, ¿qué preparación necesito para el estudio " + e.nombre + "?")) + '">Preguntar por WhatsApp</a>' : "")) + "</p></div>" +
         (incluye.length ? '<div><h3>Incluye</h3><ul class="incluye">' + incluye.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul></div>" : "") +
-        '<div class="detalle-pie"><span class="nota">Los precios se cotizan por WhatsApp.</span>' + botonAgregar(e, "boton-primario") + "</div>" +
+        '<div class="detalle-pie"><span class="nota">Agrégalo a tu lista para pedir precio por WhatsApp.</span>' + botonAgregar(e) + "</div>" +
       "</div>";
     var d = $("#detalle");
     d.dataset.id = id;
@@ -412,8 +401,8 @@
       estado.limite += POR_PAGINA;
       pintarCatalogo();
       // El foco pasa al primer estudio nuevo para seguir navegando con teclado.
-      var nuevo = $("#rejilla").querySelectorAll("[data-ver]")[antes];
-      if (nuevo) nuevo.focus({ preventScroll: true });
+      var nuevo = $("#rejilla").children[antes];
+      if (nuevo) nuevo.querySelector("[data-ver]").focus({ preventScroll: true });
     }
     else if (t.hasAttribute("data-sugerencia")) {
       estado.categoria = "";
