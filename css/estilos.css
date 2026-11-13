@@ -129,8 +129,7 @@ button { font: inherit; cursor: pointer; }
 .ventajas li { display: flex; align-items: center; gap: var(--e2); }
 .ventajas li[hidden] { display: none; }
 /* Servicio a domicilio: destacado aparte de los tres pasos. */
-.domicilio { display: flex; align-items: flex-start; gap: var(--e3); max-width: 46ch; margin: 0 0 var(--e5); padding: var(--e3) var(--e4); background: var(--papel); border: 1px solid var(--linea); border-left: 4px solid var(--azul); border-radius: var(--radio); }
-.domicilio svg { flex: none; color: var(--azul); margin-top: 1px; }
+.domicilio { max-width: 46ch; margin: 0 0 var(--e5); padding: var(--e3) var(--e4); background: #eceff4; border: 1px solid #dde2ea; border-radius: var(--radio); }
 .domicilio a { font-weight: 600; white-space: nowrap; }
 .domicilio a[hidden] { display: none; }
 .ventajas li::before { content: "✓"; flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--azul); color: #fff; font-size: var(--t-xs); display: grid; place-items: center; }
