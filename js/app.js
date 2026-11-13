@@ -67,10 +67,8 @@
     $("#datoCorreo").innerHTML = N.correo
       ? '<a href="mailto:' + esc(N.correo) + '">' + esc(N.correo) + "</a>" : pendiente;
 
-    var tel = function (n) { return '<a href="tel:' + esc(String(n).replace(/[^\d+]/g, "")) + '">' + esc(n) + "</a>"; };
-    $("#cartelHorario").innerHTML = (N.horarios || []).length
-      ? N.horarios.map(function (h) { return esc(h.dias) + "<br>" + esc(h.horas); }).join("<br>") : pendiente;
-    $("#cartelUrgencias").innerHTML = (N.urgencias || N.telefono) ? tel(N.urgencias || N.telefono) : pendiente;
+    $("#infoHorario").innerHTML = (N.horarios || []).length
+      ? N.horarios.map(function (h) { return esc(h.dias) + ", " + esc(h.horas); }).join("<br>") : pendiente;
 
 
     pintarEstadoHorario();
@@ -80,13 +78,14 @@
       $("#flotante").hidden = false;
     }
 
-    // Panel de ayuda (portada)
-    var ayuda = "";
-    if (N.whatsapp) ayuda += '<a class="boton boton-primario" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera información sobre sus estudios.") + '">Escribir por WhatsApp</a>';
-    if (N.whatsapp) ayuda += '<a class="boton" target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.") + '"><span class="txt-largo">Agendar toma a domicilio</span><span class="txt-corto">Toma a domicilio</span></a>';
-    if (N.telefono) ayuda += '<a class="boton" href="tel:' + esc(N.telefono.replace(/[^\d+]/g, "")) + '">Llamar</a>';
-    $("#ayudaAcciones").innerHTML = ayuda;
-    $("#ayuda").hidden = !ayuda;
+    // Contacto (portada): el teléfono y dos enlaces discretos; el buscador es lo principal.
+    var contacto = "";
+    var telPortada = N.telefono || N.urgencias;
+    if (telPortada) contacto += '<a class="info-telefono" href="tel:' + esc(String(telPortada).replace(/[^\d+]/g, "")) + '">' + esc(telPortada) + "</a>";
+    if (N.whatsapp) contacto += '<a target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera información sobre sus estudios.") + '">WhatsApp</a>';
+    if (N.whatsapp) contacto += '<a target="_blank" rel="noopener" href="' + enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.") + '">Toma a domicilio</a>';
+    $("#infoContacto").innerHTML = contacto;
+    $("#infoContacto").hidden = !contacto;
 
     // Sucursal (final de la página): cómo llegar y redes
     var acciones = "";
@@ -109,24 +108,53 @@
     var abierto = estaAbierto();
     document.querySelectorAll("[data-estado-horario]").forEach(function (el) {
       el.hidden = abierto === null;
-      el.textContent = abierto ? "Abierto ahora" : "Cerrado ahora";
+      var abre = abierto ? "" : proximaApertura();
+      el.textContent = abierto ? "Abierto ahora" : (abre ? "Cerrado · abre " + abre : "Cerrado ahora");
       el.classList.toggle("abierto", !!abierto);
     });
   }
 
-  // true / false según el horario; null si no hay horario estructurado.
-  function estaAbierto() {
-    var hs = (N.horarios || []).filter(function (h) { return h.abre && h.cierra && Array.isArray(h.diasSemana); });
-    if (!hs.length) return null;
+  function horariosConHoras() {
+    return (N.horarios || []).filter(function (h) { return h.abre && h.cierra && Array.isArray(h.diasSemana); });
+  }
+  function minutos(s) { var a = String(s).split(":"); return Number(a[0]) * 60 + Number(a[1] || 0); }
+
+  // Día de la semana (0 = domingo) y minutos del día en la zona del laboratorio; null si no se puede saber.
+  function ahoraLocal() {
     var p = {};
     try {
       new Intl.DateTimeFormat("en-US", { timeZone: N.zonaHoraria || "America/Mexico_City", weekday: "short", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
         .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
     } catch (err) { return null; }
     var dia = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(p.weekday);
-    var ahora = Number(p.hour) * 60 + Number(p.minute);
-    var minutos = function (s) { var a = String(s).split(":"); return Number(a[0]) * 60 + Number(a[1] || 0); };
-    return hs.some(function (h) { return h.diasSemana.indexOf(dia) !== -1 && ahora >= minutos(h.abre) && ahora < minutos(h.cierra); });
+    return dia === -1 ? null : { dia: dia, minutos: Number(p.hour) * 60 + Number(p.minute) };
+  }
+
+  // true / false según el horario; null si no hay horario estructurado.
+  function estaAbierto() {
+    var hs = horariosConHoras(), t = ahoraLocal();
+    if (!hs.length || !t) return null;
+    return hs.some(function (h) { return h.diasSemana.indexOf(t.dia) !== -1 && t.minutos >= minutos(h.abre) && t.minutos < minutos(h.cierra); });
+  }
+
+  // Texto de la siguiente apertura: "hoy 7:00 am", "mañana 7:00 am" o "el lunes 7:00 am".
+  function proximaApertura() {
+    var hs = horariosConHoras(), t = ahoraLocal();
+    if (!hs.length || !t) return "";
+    var nombres = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+    for (var d = 0; d <= 7; d++) {
+      var dia = (t.dia + d) % 7;
+      var aperturas = hs.filter(function (h) { return h.diasSemana.indexOf(dia) !== -1; })
+        .map(function (h) { return minutos(h.abre); })
+        .filter(function (m) { return d > 0 || m > t.minutos; })
+        .sort(function (a, b) { return a - b; });
+      if (aperturas.length) {
+        var m = aperturas[0], h = Math.floor(m / 60), mm = m % 60;
+        return (d === 0 ? "hoy" : d === 1 ? "mañana" : "el " + nombres[dia]) + " " +
+          ((h % 12) || 12) + ":" + (mm < 10 ? "0" : "") + mm + (h < 12 ? " am" : " pm");
+      }
+    }
+    return "";
   }
 
   function enlaceWhatsApp(texto) {
@@ -195,8 +223,8 @@
     var populares = ["Biometría", "Glucosa", "Orina", "Tiroides", "Embarazo", "Lípidos"].filter(function (t) {
       return ESTUDIOS.some(function (e) { return e._busqueda.indexOf(norm(t)) !== -1; });
     });
-    $("#sugerencias").innerHTML = (populares.length ? '<span class="sugerencias-titulo">Estudios frecuentes:</span>' : "") + populares.map(function (t) {
-      return '<button class="ficha" type="button" data-sugerencia="' + esc(t) + '">' + esc(t) + "</button>";
+    $("#sugerencias").innerHTML = (populares.length ? '<span>Frecuentes:</span>' : "") + populares.map(function (t) {
+      return '<button class="sugerencia" type="button" data-sugerencia="' + esc(t) + '">' + esc(t) + "</button>";
     }).join("");
   }
 
