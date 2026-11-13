@@ -120,10 +120,9 @@ button { font: inherit; cursor: pointer; }
 .cartel-ayuda { margin-top: var(--e4); padding-top: var(--e4); border-top: 2px solid var(--azul-claro); display: grid; gap: var(--e3); font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
 .cartel-ayuda[hidden] { display: none; }
 .cartel-ayuda p { color: var(--tinta-suave); font-size: var(--t-sm); line-height: 1.45; }
-.cartel-acciones { display: grid; gap: var(--e2); }
+.cartel-acciones { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--e2); }
 .cartel-acciones .boton { width: 100%; }
 .acciones-contacto[hidden] { display: none; }
-.txt-corto { display: none; }
 
 .ventajas { list-style: none; margin: 0 0 var(--e5); padding: 0; display: grid; gap: var(--e2); font-weight: 600; }
 .ventajas li { display: flex; align-items: center; gap: var(--e2); }
@@ -306,11 +305,7 @@ dialog .tostada { top: 14px; bottom: auto !important; }
   .cartel-dato { font-size: var(--t-base); grid-row: 3; }
   .cartel-ayuda { grid-column: 1 / -1; grid-row: 4; margin-top: var(--e3); padding-top: var(--e3); gap: var(--e2); text-align: center; }
   .cartel-ayuda p { text-wrap: balance; }
-  .cartel-acciones { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cartel-acciones .boton { padding: var(--e3) var(--e2); font-size: var(--t-sm); white-space: normal; text-align: center; }
-  .cartel-acciones .boton-primario { grid-column: 1 / -1; }
-  .txt-largo { display: none; }
-  .txt-corto { display: inline; }
 
   .flotante { padding: 14px; }
   .flotante span { display: none; }
