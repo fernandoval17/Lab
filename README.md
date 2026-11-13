@@ -36,9 +36,9 @@ Cada archivo trae instrucciones al inicio. Puntos importantes:
 - **Variantes:** los estudios con varias versiones (por ejemplo, la química sanguínea de 3
   a 45 elementos) comparten tarjeta con un selector. Se unen con el mismo `grupo`; el texto
   de cada opción va en `variante`. Cada variante conserva su propio `id`.
-- **Filtros y orden:** además de la categoría, el catálogo filtra por tipo de muestra,
-  "Requiere ayuno" (estudios cuya preparación menciona ayuno) y "Solo paquetes" (los
-  marcados con `paquete: true`), y ordena por recomendado o por nombre.
+- **Orden:** el catálogo se puede ordenar por recomendado (por categoría) o por nombre.
+- **Ayuno y paquetes:** las tarjetas muestran "Requiere ayuno" si la preparación lo menciona
+  y "Paquete" si el estudio tiene `paquete: true`.
 - **Precios:** la página no muestra precios. El paciente arma su lista y la envía por
   WhatsApp para pedirlos, o muestra el código QR de su lista en el laboratorio.
 - **Código QR:** con la página publicada en internet, el QR abre la misma página con la

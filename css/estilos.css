@@ -163,7 +163,7 @@ button { font: inherit; cursor: pointer; }
 .filtros[hidden] { display: none; }
 /* Subgrupos de una categoría (por ejemplo, tipos de infección). */
 .subfiltros { padding-left: var(--e3); border-left: 2px solid var(--cielo); }
-/* Más filtros y orden */
+/* Orden del catálogo */
 .opciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e2) var(--e3); margin: var(--e4) 0 var(--e5); padding-top: var(--e4); border-top: 1px solid var(--linea); }
 .opcion-select { display: inline-flex; align-items: center; gap: var(--e2); font-size: var(--t-sm); color: var(--tinta-suave); }
 .opcion-select select, .variante select { font: inherit; font-size: var(--t-sm); color: var(--tinta); background: var(--papel); border: 1px solid var(--linea); border-radius: 999px; padding: var(--e1) var(--e3); line-height: 1.5; cursor: pointer; }

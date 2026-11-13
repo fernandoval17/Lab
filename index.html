@@ -90,18 +90,7 @@
         </div>
         <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoría"></div>
         <div class="filtros subfiltros" id="subfiltros" role="group" aria-label="Filtrar por subgrupo" hidden></div>
-        <div class="opciones" role="group" aria-label="Más filtros y orden">
-          <label class="opcion-select"><span>Muestra</span>
-            <select id="filtroMuestra">
-              <option value="">Todas</option>
-              <option value="Sangre">Sangre</option>
-              <option value="Orina">Orina</option>
-              <option value="Heces">Heces</option>
-              <option value="Otra">Otra</option>
-            </select>
-          </label>
-          <button class="ficha" type="button" data-opcion="ayuno" aria-pressed="false">Requiere ayuno</button>
-          <button class="ficha" type="button" data-opcion="paquetes" aria-pressed="false">Solo paquetes</button>
+        <div class="opciones">
           <label class="opcion-select opcion-orden"><span>Ordenar</span>
             <select id="orden">
               <option value="recomendado">Recomendado</option>
@@ -113,7 +102,7 @@
         <div class="rejilla" id="rejilla"></div>
         <div class="mas" id="mas" hidden><button class="boton" type="button" id="verMas">Ver más estudios</button></div>
         <div class="vacio" id="vacio" hidden>
-          <p>No encontramos estudios con esa búsqueda o esos filtros. Prueba con otro nombre o pregúntanos: es posible que sí lo realicemos.</p>
+          <p>No encontramos estudios con esa búsqueda. Prueba con otro nombre o pregúntanos: es posible que sí lo realicemos.</p>
           <div class="vacio-acciones">
             <button class="boton" type="button" id="limpiar">Ver todos los estudios</button>
             <a class="boton boton-primario" id="preguntar" target="_blank" rel="noopener" hidden>Preguntar por WhatsApp</a>

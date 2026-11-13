@@ -35,7 +35,6 @@
     e.categorias = categoriasDe(e);
     var prep = String(e.preparacion || "");
     e._ayuno = /ayuno/i.test(prep) && !/no requiere ayuno/i.test(prep);
-    e._muestra = tipoDeMuestra(e.muestra);
     e._busqueda = norm([e.nombre, e.clave, e.categorias.join(" "), e.subcategoria, GRUPOS[e.grupo], e.variante, e.sinonimos, e.incluye].join(" "));
     porId[id] = e;
   });
@@ -44,14 +43,6 @@
   function categoriasDe(e) {
     if (Array.isArray(e.categorias) && e.categorias.length) return e.categorias.map(String);
     return [e.categoria || "Otros"];
-  }
-  // Tipo de muestra para el filtro: Sangre, Orina, Heces u Otra.
-  function tipoDeMuestra(m) {
-    m = norm(m);
-    if (/heces/.test(m)) return "Heces";
-    if (/orina/.test(m)) return "Orina";
-    if (/^sangre/.test(m)) return "Sangre";
-    return "Otra";
   }
 
   // Tarjetas del catálogo: una por estudio, salvo las variantes de un mismo grupo,
@@ -80,7 +71,7 @@
 
   var POR_PAGINA = 24;
   var estado = {
-    texto: "", categoria: "", subcategoria: "", muestra: "", ayuno: false, paquetes: false, orden: "recomendado",
+    texto: "", categoria: "", subcategoria: "", orden: "recomendado",
     variante: Object.create(null), lista: leerLista(), qrVisible: false, limite: POR_PAGINA
   };
 
@@ -215,21 +206,14 @@
       return ficha("data-subcat", sc, sc, estado.subcategoria === sc, total);
     }).join("") : "";
 
-    document.querySelectorAll("[data-opcion]").forEach(function (b) {
-      b.setAttribute("aria-pressed", String(!!estado[b.getAttribute("data-opcion")]));
-    });
-    $("#filtroMuestra").value = estado.muestra;
     $("#orden").value = estado.orden;
   }
 
   function pasaFiltros(e, palabras) {
-    if (estado.muestra && e._muestra !== estado.muestra) return false;
-    if (estado.ayuno && !e._ayuno) return false;
-    if (estado.paquetes && !e.paquete) return false;
     return palabras.every(function (p) { return e._busqueda.indexOf(p) !== -1; });
   }
 
-  // Tarjetas que cumplen todos los filtros, cada una con sus variantes visibles, ya ordenadas.
+  // Tarjetas de la categoría elegida que coinciden con la búsqueda, cada una con sus variantes visibles, ya ordenadas.
   function filtrados() {
     var palabras = norm(estado.texto).split(/\s+/).filter(Boolean);
     var lista = [];
@@ -508,7 +492,7 @@
 
   // ───────── Eventos ─────────
   document.addEventListener("click", function (ev) {
-    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-subcat],[data-opcion],[data-sugerencia],[data-cerrar],#abrirLista,#barraLista,#copiarLista,#vaciarLista,#alternarQR,#limpiar,#verMas");
+    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-subcat],[data-sugerencia],[data-cerrar],#abrirLista,#barraLista,#copiarLista,#vaciarLista,#alternarQR,#limpiar,#verMas");
     if (!t) {
       // Clic en el fondo oscuro cierra el diálogo.
       if (ev.target.tagName === "DIALOG") ev.target.close();
@@ -518,7 +502,6 @@
     else if (t.hasAttribute("data-ver")) abrirDetalle(t.getAttribute("data-ver"));
     else if (t.hasAttribute("data-cat")) { estado.categoria = t.getAttribute("data-cat"); estado.subcategoria = ""; estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
     else if (t.hasAttribute("data-subcat")) { estado.subcategoria = t.getAttribute("data-subcat"); estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
-    else if (t.hasAttribute("data-opcion")) { var o = t.getAttribute("data-opcion"); estado[o] = !estado[o]; estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
     else if (t.id === "verMas") {
       var antes = estado.limite;
       estado.limite += POR_PAGINA;
@@ -534,7 +517,7 @@
       buscar(t.getAttribute("data-sugerencia"), true);
     }
     else if (t.id === "limpiar") {
-      estado.categoria = ""; estado.subcategoria = ""; estado.muestra = ""; estado.ayuno = false; estado.paquetes = false;
+      estado.categoria = ""; estado.subcategoria = "";
       pintarFiltros();
       buscar("", false);
     }
@@ -549,8 +532,7 @@
 
   document.addEventListener("change", function (ev) {
     var t = ev.target;
-    if (t.id === "filtroMuestra") { estado.muestra = t.value; estado.limite = POR_PAGINA; pintarCatalogo(); }
-    else if (t.id === "orden") { estado.orden = t.value; estado.limite = POR_PAGINA; pintarCatalogo(); }
+    if (t.id === "orden") { estado.orden = t.value; estado.limite = POR_PAGINA; pintarCatalogo(); }
     else if (t.hasAttribute("data-variante")) {
       // Cambia la variante de una tarjeta y la repinta sin perder el foco del selector.
       var clave = t.getAttribute("data-variante");

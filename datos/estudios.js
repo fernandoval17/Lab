@@ -14,10 +14,11 @@
  *   grupo        (Opcional) Une variantes del mismo estudio en una sola tarjeta con
  *                selector, por ejemplo las químicas sanguíneas. Use un id de GRUPOS_ESTUDIOS.
  *   variante     (Con grupo) Texto de la opción en el selector, por ejemplo "6 elementos".
- *   paquete      (Opcional) true si es un perfil o paquete de varias pruebas.
+ *   paquete      (Opcional) true si es un perfil o paquete de varias pruebas; la tarjeta
+ *                muestra la etiqueta "Paquete".
  *   muestra      Tipo de muestra.
- *   preparacion  Indicaciones para el paciente. Si menciona ayuno, el estudio aparece
- *                en el filtro "Requiere ayuno". Si está vacío, la página invita a
+ *   preparacion  Indicaciones para el paciente. Si menciona ayuno, la tarjeta muestra
+ *                "Requiere ayuno". Si está vacío, la página invita a
  *                preguntar por WhatsApp.
  *   sinonimos    Otras palabras con las que la gente lo busca (no se muestran).
  *   descripcion  (Opcional) Para qué sirve el estudio.
