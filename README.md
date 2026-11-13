@@ -24,7 +24,7 @@ gratuito hay que hacerlo público en **Settings → General → Change visibilit
 | Qué quiere cambiar | Archivo |
 | --- | --- |
 | Estudios, su preparación, categorías y grupos (226 estudios, tomados de la lista en Excel) | `datos/estudios.js` |
-| Dirección, teléfono, WhatsApp, horarios, servicios | `datos/negocio.js` |
+| Dirección, teléfono, WhatsApp, horarios, formas de pago, zona de domicilio, servicios | `datos/negocio.js` |
 | Texto del aviso de privacidad | `aviso-de-privacidad.html` |
 
 Cada archivo trae instrucciones al inicio. Puntos importantes:

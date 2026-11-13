@@ -112,7 +112,6 @@ button { font: inherit; cursor: pointer; }
 .portada h1 em { font-style: normal; color: var(--azul); white-space: nowrap; }
 .portada-texto { margin: var(--e4) 0; max-width: 54ch; color: var(--tinta-suave); font-size: var(--t-lg); }
 .cartel { justify-self: end; width: min(340px, 100%); background: #fff; border: 3px solid var(--azul); border-radius: 22px; padding: var(--e5); text-align: center; box-shadow: 0 0 0 7px rgba(0, 74, 173, .09), 0 20px 44px rgba(0, 51, 122, .16); font-family: "League Spartan", "Century Gothic", system-ui, sans-serif; }
-.cartel img { width: 215px; height: auto; margin-bottom: var(--e3); }
 /* Cuadro de horario: la etiqueta es chica y el dato (hora, teléfono) es lo grande. */
 .cartel-titulo { color: var(--azul); font-weight: 700; font-size: var(--t-sm); text-transform: uppercase; letter-spacing: .08em; line-height: 1.25; margin-top: var(--e2); }
 .cartel-dato + .cartel-titulo { margin-top: var(--e4); }
@@ -195,13 +194,14 @@ button { font: inherit; cursor: pointer; }
 .mas { display: flex; justify-content: center; margin-top: var(--e5); }
 .mas[hidden] { display: none; }
 .vacio-acciones { display: flex; flex-wrap: wrap; gap: var(--e3); justify-content: center; margin-top: var(--e4); }
+.vacio-acciones [hidden] { display: none; }
 
 .estado-horario { display: inline-block; font-family: system-ui, sans-serif; font-size: var(--t-xs); font-weight: 700; line-height: 1.25; padding: var(--e1) var(--e3); border-radius: 999px; background: #e6e9ef; color: #4a5568; vertical-align: middle; }
 .estado-horario.abierto { background: #d9f5e3; color: #0b6b34; }
 .estado-horario[hidden] { display: none; }
 .aviso-qr { background: var(--azul-claro); border-radius: 8px; padding: var(--e2) var(--e3); margin-top: var(--e3); }
 
-.flotante { position: fixed; right: 18px; bottom: 18px; z-index: 30; display: inline-flex; align-items: center; gap: var(--e2); background: #128c4a; color: #fff; text-decoration: none; font-weight: 700; padding: var(--e3) var(--e4); border-radius: 999px; box-shadow: 0 6px 20px rgba(0, 0, 0, .25); }
+.flotante { position: fixed; right: 18px; bottom: 18px; z-index: 30; display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px; background: #128c4a; color: #fff; text-decoration: none; font-weight: 700; padding: 0; border-radius: 50%; box-shadow: 0 6px 20px rgba(0, 0, 0, .25); }
 .flotante:hover { background: #0e743d; }
 .flecha { position: fixed; right: 18px; bottom: 80px; z-index: 30; width: 48px; height: 48px; border-radius: 50%; border: 0; background: var(--azul); color: #fff; display: grid; place-items: center; box-shadow: 0 6px 20px rgba(0, 31, 77, .3); transition: background .15s, transform .15s; }
 .flecha:hover { background: var(--azul-oscuro); }
@@ -211,14 +211,12 @@ button { font: inherit; cursor: pointer; }
 .flecha svg { transition: transform .25s; }
 .flecha.arriba svg { transform: rotate(180deg); }
 .flotante[hidden], .barra-lista[hidden] { display: none; }
+/* El botón de WhatsApp es solo el ícono (el nombre queda para lectores de pantalla), para no tapar contenido. */
+.flotante span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Mientras los botones flotantes caen sobre el catálogo, el pie de cada tarjeta les deja espacio a la derecha. */
+@media (max-width: 1260px) { .tarjeta-pie { padding-right: 60px; } }
 .barra-lista { display: none; }
 
-/* Cómo funciona */
-.pasos { list-style: none; counter-reset: paso; padding: 0; margin: var(--e5) 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--e4); }
-.pasos li { counter-increment: paso; background: var(--papel); border-radius: var(--radio); padding: var(--e5); display: grid; gap: var(--e1); align-content: start; }
-.pasos li::before { content: counter(paso); width: 34px; height: 34px; border-radius: 50%; background: var(--azul); color: #fff; font-weight: 700; display: grid; place-items: center; margin-bottom: var(--e2); }
-.pasos b { font-size: var(--t-lg); line-height: 1.25; }
-.pasos span { color: var(--tinta-suave); }
 .servicios { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--e4); margin-top: var(--e6); }
 .servicios div { border-left: 3px solid var(--azul); padding-left: var(--e4); }
 .servicios p { color: var(--tinta-suave); font-size: var(--t-sm); }
@@ -328,7 +326,6 @@ dialog .tostada { top: 14px; bottom: auto !important; }
   .ventajas { margin: var(--e3) 0 0; }
   .domicilio { margin: var(--e4) 0 0; max-width: none; }
   .cartel { justify-self: center; width: 100%; border-width: 2px; border-radius: 18px; box-shadow: 0 0 0 5px rgba(0, 74, 173, .08), 0 12px 28px rgba(0, 51, 122, .12); padding: var(--e3) var(--e3) var(--e4); display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--e3); }
-  .cartel img { display: none; }
   .cartel .estado-horario { grid-column: 1 / -1; justify-self: center; margin-bottom: var(--e1); }
   .cartel-titulo, .cartel-dato + .cartel-titulo { margin: 0 0 var(--e1); grid-row: 2; }
   .cartel-dato { font-size: var(--t-lg); grid-row: 3; }
@@ -336,12 +333,11 @@ dialog .tostada { top: 14px; bottom: auto !important; }
   .cartel-ayuda p { text-wrap: balance; }
   .cartel-acciones .boton { padding: var(--e3) var(--e2); font-size: var(--t-sm); white-space: normal; text-align: center; }
 
-  .flotante { padding: 14px; }
-  .flotante span { display: none; }
   .barra-lista { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 31; display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 0; border-radius: 14px; background: var(--azul); color: #fff; padding: 14px 18px; box-shadow: 0 8px 24px rgba(0, 31, 77, .35); }
   .barra-lista b { text-decoration: underline; text-underline-offset: 4px; }
   .con-barra .flotante { bottom: 78px; }
   .flecha { bottom: 82px; right: 20px; }
+  .flotante { right: 18px; }
   .con-barra .flecha { bottom: 142px; }
   .con-barra .tostada { bottom: 84px; }
   .con-barra .pie { padding-bottom: 96px; }
