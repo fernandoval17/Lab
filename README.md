@@ -25,6 +25,7 @@ gratuito hay que hacerlo público en **Settings → General → Change visibilit
 | --- | --- |
 | Estudios y su preparación (226 estudios, tomados de la lista en Excel) | `datos/estudios.js` |
 | Dirección, teléfono, WhatsApp, horarios, servicios | `datos/negocio.js` |
+| Texto del aviso de privacidad | `aviso-de-privacidad.html` |
 
 Cada archivo trae instrucciones al inicio. Puntos importantes:
 
@@ -36,5 +37,9 @@ Cada archivo trae instrucciones al inicio. Puntos importantes:
   botones "Escribir por WhatsApp" y "Cotizar por WhatsApp".
 - **Datos de contacto:** teléfono, WhatsApp, dirección, horario, correo y redes se cambian
   solo en `datos/negocio.js`; la página los toma de ahí en todas sus secciones.
+- **Aviso de privacidad:** está en `aviso-de-privacidad.html` y se enlaza desde el pie de
+  página. Toma el domicilio, el correo y el teléfono de `datos/negocio.js`. Escriba en
+  `responsable` el nombre legal del dueño o la razón social. Si cambia el texto, actualice
+  la fecha de "Última actualización".
 - **Aviso amarillo:** cuando la información ya esté revisada, cambie
   `catalogoPreliminar` a `false` en `datos/negocio.js` para ocultarlo.
