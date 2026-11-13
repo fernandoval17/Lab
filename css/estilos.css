@@ -137,6 +137,9 @@ button { font: inherit; cursor: pointer; }
 .buscador:focus-within { border-color: var(--azul); }
 .buscador input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; color: var(--tinta); padding: var(--e3) var(--e1); }
 .buscador-catalogo { max-width: none; box-shadow: none; margin-bottom: var(--e4); }
+/* Buscador de la portada: debajo de los pasos, con botón para ir a los resultados. */
+.buscador-portada { margin: 0 0 var(--e4); max-width: 520px; padding-right: var(--e1); }
+.buscador-portada .boton { flex: none; }
 .sugerencias { display: flex; flex-wrap: wrap; gap: var(--e2); margin-top: var(--e4); }
 
 .ficha { border: 1px solid var(--linea); background: var(--papel); color: var(--tinta); border-radius: 999px; padding: var(--e2) var(--e3); font-size: var(--t-sm); line-height: 1.25; }
@@ -294,7 +297,7 @@ dialog .tostada { top: 14px; bottom: auto !important; }
   html { scroll-padding-top: 70px; }
   .menu { display: none; }
   .boton-lista { margin-left: auto; }
-  .portada-fila, .dos-columnas { grid-template-columns: 1fr; }
+  .portada-fila, .dos-columnas { grid-template-columns: minmax(0, 1fr); }
   .dos-columnas { gap: var(--e5); }
   .cajon { border-radius: 0; }
   .filtros { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; margin-bottom: var(--e2); padding: var(--e1) var(--e4) var(--e2); scrollbar-width: none; }
@@ -320,6 +323,7 @@ dialog .tostada { top: 14px; bottom: auto !important; }
   .sobretitulo-lugar { display: none; }
   .portada-texto { font-size: var(--t-base); margin: var(--e3) 0 0; }
   .ventajas { margin: var(--e3) 0 0; }
+  .buscador-portada { margin: var(--e5) 0 0; max-width: none; }
   .cartel { justify-self: center; width: 100%; border-width: 2px; border-radius: 18px; box-shadow: 0 0 0 5px rgba(0, 74, 173, .08), 0 12px 28px rgba(0, 51, 122, .12); padding: var(--e3) var(--e3) var(--e4); display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--e3); }
   .cartel .estado-horario { grid-column: 1 / -1; justify-self: center; margin-bottom: var(--e1); }
   .cartel-titulo, .cartel-dato + .cartel-titulo { margin: 0 0 var(--e1); grid-row: 2; }
