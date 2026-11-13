@@ -48,8 +48,8 @@ Cada archivo trae instrucciones al inicio. Puntos importantes:
 - **Datos de contacto:** teléfono, WhatsApp, dirección, horario, correo y redes se cambian
   solo en `datos/negocio.js`; la página los toma de ahí en todas sus secciones.
 - **Aviso de privacidad:** está en `aviso-de-privacidad.html` y se enlaza desde el pie de
-  página. Toma el domicilio, el correo y el teléfono de `datos/negocio.js`. Escriba en
-  `responsable` el nombre legal del dueño o la razón social. Si cambia el texto, actualice
+  página. Toma el domicilio, el correo y el teléfono de `datos/negocio.js`. El nombre legal del responsable
+  está en `responsable`. Si cambia el texto, actualice
   la fecha de "Última actualización".
 - **Aviso amarillo:** cuando la información ya esté revisada, cambie
   `catalogoPreliminar` a `false` en `datos/negocio.js` para ocultarlo.

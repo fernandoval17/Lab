@@ -7,7 +7,7 @@ window.NEGOCIO = {
   nombre: "Laboratorio Sta. Margarita",
   // Nombre legal del responsable para el aviso de privacidad: el nombre completo del dueño
   // (persona física) o la razón social (empresa). Vacío = se usa el nombre de arriba.
-  responsable: "",
+  responsable: "Martha Esthela Gallegos Topete",
   lema: "Análisis clínicos y especializados",
   ubicacionCorta: "Etzatlán, Jalisco",
 

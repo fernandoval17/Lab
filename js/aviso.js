@@ -16,6 +16,10 @@
     if (v) el.textContent = v;
   });
 
+  // "…, titular de Laboratorio Sta. Margarita" solo tiene sentido si hay un nombre legal distinto.
+  var titular = document.getElementById("titularDe");
+  if (titular) titular.hidden = !N.responsable;
+
   document.querySelectorAll('[data-enlace="correo"]').forEach(function (el) {
     if (!N.correo) return;
     el.href = "mailto:" + N.correo;
