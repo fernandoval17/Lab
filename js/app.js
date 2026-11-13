@@ -18,14 +18,15 @@
   // Identificador único y texto de búsqueda por estudio.
   var porId = {};
   ESTUDIOS.forEach(function (e, i) {
-    var id = String(e.clave || "").trim();
+    var id = String(e.id || e.clave || "").trim();
     if (!id || porId[id]) id = "e" + i;
     e.id = id;
     e._busqueda = norm([e.nombre, e.clave, e.categoria, e.sinonimos, e.incluye].join(" "));
     porId[id] = e;
   });
 
-  var estado = { texto: "", categoria: "", lista: leerLista(), qrVisible: false };
+  var POR_PAGINA = 24;
+  var estado = { texto: "", categoria: "", lista: leerLista(), qrVisible: false, limite: POR_PAGINA };
 
   function leerLista() {
     try {
@@ -157,7 +158,8 @@
 
   function pintarCatalogo() {
     var lista = filtrados();
-    $("#rejilla").innerHTML = lista.map(function (e) {
+    var visibles = lista.slice(0, estado.limite);
+    $("#rejilla").innerHTML = visibles.map(function (e) {
       var meta = [e.muestra].filter(Boolean)
         .map(function (m) { return "<span>" + esc(m) + "</span>"; }).join("");
       return '<article class="tarjeta">' +
@@ -167,6 +169,9 @@
         '<div class="tarjeta-pie"><button class="enlace" type="button" data-ver="' + esc(e.id) + '">Ver detalles</button>' + botonAgregar(e) + "</div>" +
         "</article>";
     }).join("");
+    var restantes = lista.length - visibles.length;
+    $("#mas").hidden = restantes <= 0;
+    $("#verMas").textContent = "Ver más estudios (" + restantes + " restantes)";
     $("#vacio").hidden = lista.length > 0;
     if (!lista.length && N.whatsapp) {
       $("#preguntar").href = enlaceWhatsApp("Hola, ¿realizan este estudio? " + estado.texto.trim());
@@ -178,7 +183,7 @@
   }
 
   function pintarSugerencias() {
-    var populares = ["Biometría", "Glucosa", "Orina", "Tiroides", "Embarazo", "Check-up"].filter(function (t) {
+    var populares = ["Biometría", "Glucosa", "Orina", "Tiroides", "Embarazo", "Lípidos"].filter(function (t) {
       return ESTUDIOS.some(function (e) { return e._busqueda.indexOf(norm(t)) !== -1; });
     });
     $("#sugerencias").innerHTML = (populares.length ? '<span class="sugerencias-titulo">Estudios frecuentes:</span>' : "") + populares.map(function (t) {
@@ -198,7 +203,9 @@
         '<button class="cerrar" type="button" data-cerrar aria-label="Cerrar">×</button></div>' +
         (e.descripcion ? "<p>" + esc(e.descripcion) + "</p>" : "") +
         (e.muestra ? '<dl class="detalle-datos">' + dato("Muestra", e.muestra) + "</dl>" : "") +
-        (e.preparacion ? '<div><h3>Preparación</h3><p class="preparacion">' + esc(e.preparacion) + "</p></div>" : "") +
+        '<div><h3>Preparación</h3><p class="preparacion">' + (e.preparacion ? esc(e.preparacion)
+          : "Pregúntanos si este estudio requiere ayuno u otra preparación." +
+            (N.whatsapp ? ' <a target="_blank" rel="noopener" href="' + esc(enlaceWhatsApp("Hola, ¿qué preparación necesito para el estudio " + e.nombre + "?")) + '">Preguntar por WhatsApp</a>' : "")) + "</p></div>" +
         (incluye.length ? '<div><h3>Incluye</h3><ul class="incluye">' + incluye.map(function (i) { return "<li>" + esc(i) + "</li>"; }).join("") + "</ul></div>" : "") +
         '<div class="detalle-pie"><span class="nota">Agrégalo a tu lista para pedir precio por WhatsApp.</span>' + botonAgregar(e) + "</div>" +
       "</div>";
@@ -226,7 +233,7 @@
       return location.origin + location.pathname + "#lista=" + sel.map(function (e) { return encodeURIComponent(e.id); }).join(",");
     }
     return [(N.nombre || "Laboratorio") + " - Lista de estudios (" + sel.length + ")"]
-      .concat(sel.map(function (e, i) { return (i + 1) + ". " + e.nombre + (e.clave ? " [" + e.clave + "]" : ""); })).join("\n");
+      .concat(sel.map(function (e, i) { return (i + 1) + ". " + e.nombre; })).join("\n");
   }
 
   function svgQR(texto) {
@@ -310,6 +317,7 @@
 
   function buscar(texto, desplazar) {
     estado.texto = texto;
+    estado.limite = POR_PAGINA;
     if ($("#buscar").value !== texto) $("#buscar").value = texto;
     // Si la categoría elegida no tiene coincidencias, se busca en todo el catálogo.
     if (estado.categoria && !filtrados().length) { estado.categoria = ""; pintarFiltros(); }
@@ -370,7 +378,7 @@
 
   // ───────── Eventos ─────────
   document.addEventListener("click", function (ev) {
-    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-sugerencia],[data-cerrar],#abrirLista,#barraLista,#copiarLista,#vaciarLista,#alternarQR,#limpiar");
+    var t = ev.target.closest("[data-alternar],[data-ver],[data-cat],[data-sugerencia],[data-cerrar],#abrirLista,#barraLista,#copiarLista,#vaciarLista,#alternarQR,#limpiar,#verMas");
     if (!t) {
       // Clic en el fondo oscuro cierra el diálogo.
       if (ev.target.tagName === "DIALOG") ev.target.close();
@@ -378,7 +386,15 @@
     }
     if (t.hasAttribute("data-alternar")) alternar(t.getAttribute("data-alternar"));
     else if (t.hasAttribute("data-ver")) abrirDetalle(t.getAttribute("data-ver"));
-    else if (t.hasAttribute("data-cat")) { estado.categoria = t.getAttribute("data-cat"); pintarFiltros(); pintarCatalogo(); }
+    else if (t.hasAttribute("data-cat")) { estado.categoria = t.getAttribute("data-cat"); estado.limite = POR_PAGINA; pintarFiltros(); pintarCatalogo(); }
+    else if (t.id === "verMas") {
+      var antes = estado.limite;
+      estado.limite += POR_PAGINA;
+      pintarCatalogo();
+      // El foco pasa al primer estudio nuevo para seguir navegando con teclado.
+      var nuevo = $("#rejilla").children[antes];
+      if (nuevo) nuevo.querySelector("[data-ver]").focus({ preventScroll: true });
+    }
     else if (t.hasAttribute("data-sugerencia")) {
       estado.categoria = "";
       pintarFiltros();
