@@ -256,7 +256,8 @@
 
   function htmlTarjeta(item) {
     var t = item.t, e = estudioElegido(item);
-    var etiqueta = estado.categoria && t.categorias.indexOf(estado.categoria) !== -1 ? estado.categoria : t.categorias[0];
+    // Con una categoría elegida todas las tarjetas dirían lo mismo, así que la etiqueta se omite.
+    var etiqueta = estado.categoria ? "" : t.categorias[0];
     var selector = "";
     if (t.grupo && item.estudios.length > 1) {
       selector = '<label class="variante"><span>Opción</span><select data-variante="' + esc(t.clave) + '" aria-label="Opción de ' + esc(t.titulo) + '">' +
@@ -269,7 +270,7 @@
     var meta = [e.muestra, e._ayuno ? "Requiere ayuno" : "", e.paquete ? "Paquete" : ""].filter(Boolean)
       .map(function (m) { return "<span>" + esc(m) + "</span>"; }).join("");
     return '<article class="tarjeta" data-tarjeta="' + esc(t.clave) + '">' +
-      '<span class="etiqueta">' + esc(etiqueta) + "</span>" +
+      (etiqueta ? '<span class="etiqueta">' + esc(etiqueta) + "</span>" : "") +
       '<h3><button type="button" data-ver="' + esc(e.id) + '">' + esc(t.titulo) + "</button></h3>" +
       selector +
       '<div class="meta">' + meta + "</div>" +
