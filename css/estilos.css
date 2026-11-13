@@ -86,6 +86,11 @@ button { font: inherit; cursor: pointer; }
 .menu { display: flex; gap: var(--e5); margin-left: auto; }
 .menu a { color: var(--tinta); text-decoration: none; }
 .menu a:hover { color: var(--azul); text-decoration: underline; text-underline-offset: 6px; }
+/* Botón del menú: solo en celular. */
+.boton-menu { display: none; flex: none; align-items: center; justify-content: center; width: 44px; height: 44px; margin-right: -10px; border: 0; border-radius: 50%; background: none; color: var(--tinta); }
+.boton-menu:hover { background: var(--azul-claro); }
+.boton-menu .icono-cerrar, .boton-menu[aria-expanded="true"] .icono-abrir { display: none; }
+.boton-menu[aria-expanded="true"] .icono-cerrar { display: block; }
 
 .boton { display: inline-flex; align-items: center; justify-content: center; gap: var(--e2); border: 1.5px solid var(--azul); background: transparent; color: var(--azul); padding: var(--e3) var(--e4); border-radius: 999px; font-weight: 600; line-height: 1.25; text-decoration: none; white-space: nowrap; }
 .boton:hover { background: var(--azul-claro); }
@@ -295,7 +300,12 @@ dialog .tostada { top: 14px; bottom: auto !important; }
 @media (max-width: 820px) {
   /* La letra no se encoge en celular: el texto sigue en 16 px y lo más chico en 13 px. */
   html { scroll-padding-top: 70px; }
-  .menu { display: none; }
+  /* Menú en celular: el botón abre un panel bajo la cabecera con las secciones. */
+  .boton-menu { display: inline-flex; }
+  .menu { display: none; position: absolute; top: 100%; left: 0; right: 0; margin: 0; flex-direction: column; gap: 0; padding: var(--e2) 0; background: var(--papel); border-bottom: 1px solid var(--linea); box-shadow: 0 12px 24px rgba(0, 31, 77, .12); }
+  .menu.abierto { display: flex; }
+  .menu a { display: flex; align-items: center; min-height: 48px; padding: 0 var(--e4); font-size: var(--t-lg); }
+  .menu a:hover, .menu a:focus-visible { background: var(--crema); text-decoration: none; }
   .boton-lista { margin-left: auto; }
   .portada-fila, .dos-columnas { grid-template-columns: minmax(0, 1fr); }
   .dos-columnas { gap: var(--e5); }
