@@ -322,7 +322,11 @@ dialog .tostada { top: 14px; bottom: auto !important; }
   .sobretitulo { margin-bottom: var(--e2); }
   .sobretitulo-lugar { display: none; }
   .portada-texto { font-size: var(--t-base); margin: var(--e3) 0 0; }
-  .ventajas { margin: var(--e3) 0 0; }
+  /* Pasos de la portada más compactos en celular: texto de 14 px y círculos de 22 px. */
+  .ventajas { margin: var(--e3) 0 0; gap: var(--e3); font-size: var(--t-sm); }
+  .ventajas li { gap: var(--e2); }
+  .ventajas li::before { width: 22px; height: 22px; font-size: var(--t-xs); }
+  .ventajas li:not(:last-child)::after { left: 10px; top: 22px; bottom: calc(-1 * var(--e3)); }
   .buscador-portada { margin: var(--e5) 0 0; max-width: none; }
   .cartel { justify-self: center; width: 100%; border-width: 2px; border-radius: 18px; box-shadow: 0 0 0 5px rgba(0, 74, 173, .08), 0 12px 28px rgba(0, 51, 122, .12); padding: var(--e3) var(--e3) var(--e4); display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--e3); }
   .cartel .estado-horario { grid-column: 1 / -1; justify-self: center; margin-bottom: var(--e1); }
