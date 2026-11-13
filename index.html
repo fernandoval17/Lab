@@ -23,7 +23,7 @@
 <body>
   <a class="saltar" href="#estudios">Ir al catálogo</a>
 
-  <noscript><div class="aviso">Para ver el catálogo de estudios y los datos de contacto, active JavaScript en su navegador.</div></noscript>
+  <noscript><div class="aviso">Para ver el catálogo de estudios y los datos de contacto, activa JavaScript en tu navegador.</div></noscript>
   <div class="aviso" id="aviso" hidden>
     Catálogo preliminar: la lista de estudios está por confirmar.
   </div>
@@ -35,7 +35,6 @@
       </a>
       <nav class="menu" aria-label="Principal">
         <a href="#estudios">Estudios</a>
-        <a href="#como">Cómo funciona</a>
         <a href="#indicaciones">Preparación</a>
         <a href="#sucursal">Sucursal</a>
       </nav>
@@ -50,13 +49,12 @@
     <section class="portada">
       <div class="contenedor portada-fila">
         <div>
-          <p class="sobretitulo">Análisis clínicos y especializados<span class="sobretitulo-lugar"> · Etzatlán, Jalisco</span></p>
-          <h1>Estudios de laboratorio para <em>cuidar tu salud</em></h1>
-          <p class="portada-texto">Somos tu laboratorio en Etzatlán.</p>
+          <h1>Análisis clínicos en Etzatlán, Jalisco</h1>
+          <p class="portada-texto"><span id="totalEstudios">Más de 200</span> estudios, con toma de muestras en sucursal o a domicilio.</p>
           <ul class="ventajas">
             <li>Busca tu estudio y revisa cómo prepararte</li>
-            <li>Cotiza por WhatsApp</li>
-            <li>Tomamos tus muestras a domicilio</li>
+            <li>Arma tu lista y cotiza por WhatsApp</li>
+            <li>Ven con el código QR de tu lista o pide la toma a domicilio</li>
           </ul>
           <div class="sugerencias" id="sugerencias" aria-label="Estudios frecuentes"></div>
         </div>
@@ -68,7 +66,7 @@
           <p class="cartel-titulo">Urgencias</p>
           <p class="cartel-dato" id="cartelUrgencias"></p>
           <div class="cartel-ayuda" id="ayuda" hidden>
-            <p>¿Tienes dudas sobre un estudio o su preparación? Con gusto te orientamos.</p>
+            <p>¿Dudas sobre un estudio? Te orientamos.</p>
             <div class="cartel-acciones" id="ayudaAcciones"></div>
           </div>
         </aside>
@@ -81,7 +79,7 @@
           <h2>Catálogo de estudios</h2>
           <p id="resumen" aria-live="polite"></p>
         </div>
-        <div class="buscador buscador-catalogo" role="search">
+        <div class="buscador" role="search">
           <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.3 4.2-1.4 1.4-4.3-4.2A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z" fill="currentColor"/></svg>
           <input id="buscar" type="search" placeholder="¿Qué estudio buscas?" aria-label="Buscar estudio" autocomplete="off">
         </div>
@@ -89,7 +87,7 @@
         <div class="rejilla" id="rejilla"></div>
         <div class="mas" id="mas" hidden><button class="boton" type="button" id="verMas">Ver más estudios</button></div>
         <div class="vacio" id="vacio" hidden>
-          <p>No encontramos estudios con esa búsqueda. Prueba con otro nombre o pregúntanos: es posible que sí lo realicemos.</p>
+          <p>No encontramos ese estudio. Pregúntanos: es posible que sí lo realicemos.</p>
           <div class="vacio-acciones">
             <button class="boton" type="button" id="limpiar">Ver todos los estudios</button>
             <a class="boton boton-primario" id="preguntar" target="_blank" rel="noopener" hidden>Preguntar por WhatsApp</a>
@@ -98,29 +96,24 @@
       </div>
     </section>
 
-    <section class="seccion seccion-suave" id="como">
+    <section class="seccion seccion-linea" id="serviciosSeccion" hidden>
       <div class="contenedor">
-        <h2>Cómo funciona</h2>
-        <ol class="pasos">
-          <li><b>Busca tu estudio</b><span>Revisa para qué sirve, qué muestra requiere y cómo prepararte.</span></li>
-          <li><b>Arma tu lista</b><span>Agrega los estudios que te pidió tu médico y envíala por WhatsApp para conocer precios.</span></li>
-          <li><b>Visítanos o agenda a domicilio</b><span>Sigue las indicaciones de cada estudio y muestra el código QR de tu lista en la sucursal, o pide la toma de muestras en tu casa.</span></li>
-        </ol>
+        <h2>Servicios</h2>
         <div class="servicios" id="servicios"></div>
       </div>
     </section>
 
-    <section class="seccion" id="indicaciones">
+    <section class="seccion seccion-linea" id="indicaciones">
       <div class="contenedor dos-columnas">
         <div>
           <h2>Antes de tu visita</h2>
-          <p class="texto-suave">Una buena preparación ayuda a que tus resultados sean confiables. Cada estudio muestra sus indicaciones específicas; estas son las generales.</p>
+          <p class="texto-suave">Indicaciones generales. Las de cada estudio están en el catálogo.</p>
         </div>
-        <ul class="lista-palomas" id="listaIndicaciones"></ul>
+        <ul class="lista-simple" id="listaIndicaciones"></ul>
       </div>
     </section>
 
-    <section class="seccion seccion-oscura" id="sucursal">
+    <section class="seccion seccion-blanca" id="sucursal">
       <div class="contenedor dos-columnas">
         <div>
           <h2>Visítanos</h2>
@@ -139,7 +132,7 @@
   <footer class="pie">
     <div class="contenedor">
       <p><b data-negocio="nombre">Laboratorio Sta. Margarita</b> · <span data-negocio="ubicacionCorta">Etzatlán, Jalisco</span></p>
-      <p class="pie-nota">La información de esta página es orientativa y no sustituye la indicación de su médico. Los precios se informan por WhatsApp, teléfono o en sucursal.</p>
+      <p class="pie-nota">La información de esta página es orientativa y no sustituye la indicación de tu médico. Los precios se informan por WhatsApp, teléfono o en sucursal.</p>
     </div>
   </footer>
 
