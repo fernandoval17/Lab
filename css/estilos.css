@@ -45,10 +45,14 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 84px; scrollbar-gutter: stable; }
-/* En celulares el lienzo usa el azul del pie: al rebotar el scroll o bajo la barra de Safari
-   se ve este color, y así no aparece una franja clara debajo del pie. Solo en pantallas táctiles,
-   porque en computadora el espacio de la barra de scroll también tomaría este color. */
-@media (pointer: coarse) { html { background: #001f4d; } }
+/* En celulares la página y el body usan el azul del pie, y el contenido (main) conserva el crema.
+   Safari muestra el color de fondo al rebotar el scroll y bajo su barra inferior; así se ve azul
+   y no aparece una franja clara debajo del pie. Solo en pantallas táctiles, porque en computadora
+   el espacio de la barra de scroll también tomaría este color. */
+@media (pointer: coarse) {
+  html, html body { background: #001f4d; }
+  main { background: var(--crema); }
+}
 /* Con una ventana abierta, la página de fondo no se desplaza. */
 html:has(dialog[open]) { overflow: hidden; }
 body {
