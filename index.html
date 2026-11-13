@@ -23,7 +23,7 @@
 <body>
   <a class="saltar" href="#estudios">Ir al catálogo</a>
 
-  <noscript><div class="aviso">Para ver el catálogo de estudios y los datos de contacto, active JavaScript en su navegador.</div></noscript>
+  <noscript><div class="aviso">Para ver el catálogo de estudios y los datos de contacto, activa JavaScript en tu navegador.</div></noscript>
   <div class="aviso" id="aviso" hidden>
     Catálogo preliminar: la lista de estudios está por confirmar.
   </div>
@@ -35,7 +35,6 @@
       </a>
       <nav class="menu" aria-label="Principal">
         <a href="#estudios">Estudios</a>
-        <a href="#como">Cómo funciona</a>
         <a href="#indicaciones">Preparación</a>
         <a href="#sucursal">Sucursal</a>
       </nav>
@@ -58,13 +57,9 @@
             <li>Cotiza por WhatsApp</li>
             <li>Prepárate y acude al laboratorio a tomar tu muestra</li>
           </ul>
-          <p class="domicilio">
-            <span><b>¿No puedes venir?</b> Tomamos tus muestras en tu casa. <a id="domicilioEnlace" target="_blank" rel="noopener" hidden>Agendar a domicilio</a></span>
-          </p>
           <div class="sugerencias" id="sugerencias" aria-label="Estudios frecuentes"></div>
         </div>
         <aside class="cartel" aria-label="Horario, urgencias y contacto">
-          <img src="img/logo.png" alt="" width="215" height="83">
           <p class="estado-horario" data-estado-horario hidden></p>
           <p class="cartel-titulo">Horario</p>
           <p class="cartel-dato" id="cartelHorario"></p>
@@ -105,7 +100,7 @@
         <div class="rejilla" id="rejilla"></div>
         <div class="mas" id="mas" hidden><button class="boton" type="button" id="verMas">Ver más estudios</button></div>
         <div class="vacio" id="vacio" hidden>
-          <p>No encontramos estudios con esa búsqueda. Prueba con otro nombre o pregúntanos: es posible que sí lo realicemos.</p>
+          <p id="vacioTexto">No encontramos estudios con esa búsqueda. Prueba con otro nombre o pregúntanos: es posible que sí lo realicemos.</p>
           <div class="vacio-acciones">
             <button class="boton" type="button" id="limpiar">Ver todos los estudios</button>
             <a class="boton boton-primario" id="preguntar" target="_blank" rel="noopener" hidden>Preguntar por WhatsApp</a>
@@ -114,14 +109,9 @@
       </div>
     </section>
 
-    <section class="seccion seccion-suave" id="como">
+    <section class="seccion seccion-suave" id="serviciosSeccion" hidden>
       <div class="contenedor">
-        <h2>Cómo funciona</h2>
-        <ol class="pasos">
-          <li><b>Busca tu estudio</b><span>Revisa para qué sirve, qué muestra requiere y cómo prepararte.</span></li>
-          <li><b>Arma tu lista</b><span>Agrega los estudios que te pidió tu médico y envíala por WhatsApp para conocer precios.</span></li>
-          <li><b>Visítanos o agenda a domicilio</b><span>Sigue las indicaciones de cada estudio y muestra el código QR de tu lista en la sucursal, o pide la toma de muestras en tu casa.</span></li>
-        </ol>
+        <h2>Servicios</h2>
         <div class="servicios" id="servicios"></div>
       </div>
     </section>
@@ -145,6 +135,7 @@
             <div><dt>Horario</dt><dd><span id="datoHorario"></span> <span class="estado-horario" data-estado-horario hidden></span></dd></div>
             <div><dt>Teléfono y urgencias</dt><dd id="datoTelefono"></dd></div>
             <div><dt>Correo</dt><dd id="datoCorreo"></dd></div>
+            <div id="filaPagos" hidden><dt>Formas de pago</dt><dd id="datoPagos"></dd></div>
           </dl>
         </div>
         <div class="acciones-contacto" id="accionesContacto"></div>
@@ -155,7 +146,7 @@
   <footer class="pie">
     <div class="contenedor">
       <p><b data-negocio="nombre">Laboratorio Sta. Margarita</b> · <span data-negocio="ubicacionCorta">Etzatlán, Jalisco</span></p>
-      <p class="pie-nota">La información de esta página es orientativa y no sustituye la indicación de su médico. Los precios se informan por WhatsApp, teléfono o en sucursal.</p>
+      <p class="pie-nota">La información de esta página es orientativa y no sustituye la indicación de tu médico. Los precios se informan por WhatsApp, teléfono o en sucursal.</p>
       <p class="pie-nota"><a href="aviso-de-privacidad.html">Aviso de privacidad</a></p>
     </div>
   </footer>

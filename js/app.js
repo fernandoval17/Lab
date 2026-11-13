@@ -114,10 +114,6 @@
     pintarEstadoHorario();
     setInterval(pintarEstadoHorario, 60000);
     if (N.whatsapp) {
-      $("#domicilioEnlace").href = enlaceWhatsApp("Hola, quisiera agendar una toma de muestras a domicilio.");
-      $("#domicilioEnlace").hidden = false;
-    }
-    if (N.whatsapp) {
       $("#flotante").href = enlaceWhatsApp("Hola, quisiera información sobre sus estudios.");
       $("#flotante").hidden = false;
     }
@@ -143,7 +139,9 @@
     $("#servicios").innerHTML = (N.servicios || []).map(function (s) {
       return "<div><b>" + esc(s.titulo) + "</b><p>" + esc(s.texto) + "</p></div>";
     }).join("");
-    $("#servicios").hidden = !(N.servicios || []).length;
+    $("#serviciosSeccion").hidden = !(N.servicios || []).length;
+    $("#datoPagos").textContent = N.pagos || "";
+    $("#filaPagos").hidden = !N.pagos;
     $("#listaIndicaciones").innerHTML = (N.indicaciones || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("");
   }
 
@@ -296,11 +294,17 @@
     $("#mas").hidden = restantes <= 0;
     $("#verMas").textContent = "Ver más estudios (" + restantes + " restantes)";
     $("#vacio").hidden = lista.length > 0;
+    // Si el catálogo no cargó, se dice así en lugar de "no encontramos estudios con esa búsqueda".
+    var sinCatalogo = !TARJETAS.length;
+    $("#vacioTexto").textContent = sinCatalogo
+      ? "No pudimos cargar el catálogo. Recarga la página o escríbenos por WhatsApp y te decimos si realizamos tu estudio."
+      : "No encontramos estudios con esa búsqueda. Prueba con otro nombre o pregúntanos: es posible que sí lo realicemos.";
+    $("#limpiar").hidden = sinCatalogo;
     if (!lista.length && N.whatsapp) {
-      $("#preguntar").href = enlaceWhatsApp("Hola, ¿realizan este estudio? " + estado.texto.trim());
+      $("#preguntar").href = enlaceWhatsApp(sinCatalogo ? "Hola, quisiera información sobre sus estudios." : "Hola, ¿realizan este estudio? " + estado.texto.trim());
       $("#preguntar").hidden = false;
     }
-    $("#resumen").textContent = lista.length === TARJETAS.length
+    $("#resumen").textContent = sinCatalogo ? "Catálogo no disponible" : lista.length === TARJETAS.length
       ? TARJETAS.length + " estudios disponibles"
       : lista.length + " de " + TARJETAS.length + " estudios";
   }

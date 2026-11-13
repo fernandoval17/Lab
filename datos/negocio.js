@@ -30,14 +30,17 @@ window.NEGOCIO = {
     { dias: "Lunes a sábado", horas: "7:00 am a 2:30 pm", diasSemana: [1, 2, 3, 4, 5, 6], abre: "07:00", cierra: "14:30" },
   ],
 
-  // Recuadros de servicios bajo "Cómo funciona". Vacío = no se muestran.
+  // Formas de pago (aparece en "Visítanos"). Vacío = no se muestra.
+  pagos: "Aceptamos pago con tarjeta.",
+
+  // Recuadros de la sección "Servicios". Vacío = la sección no se muestra.
   // Ej. { titulo: "Toma de muestras a domicilio", texto: "Agenda tu cita por WhatsApp." },
   servicios: [],
 
   indicaciones: [
-    "Presente la orden de su médico si cuenta con ella.",
-    "Si su estudio requiere ayuno, puede tomar agua natural.",
-    "Informe al personal si toma algún medicamento.",
-    "Para muestras de orina o heces, use frascos limpios y estériles.",
+    "Presenta la orden de tu médico si cuentas con ella.",
+    "Si tu estudio requiere ayuno, puedes tomar agua natural.",
+    "Informa al personal si tomas algún medicamento.",
+    "Para muestras de orina o heces, usa frascos limpios y estériles.",
   ],
 };
