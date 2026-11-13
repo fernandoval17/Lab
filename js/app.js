@@ -1,6 +1,14 @@
 (function () {
   "use strict";
 
+  // Protección contra "clickjacking": si otra página incrusta este sitio en un
+  // marco, se oculta el contenido y se intenta abrir el sitio directamente.
+  if (window.top !== window.self) {
+    document.documentElement.style.display = "none";
+    try { window.top.location = window.self.location.href; } catch (err) { /* marco aislado: queda oculto */ }
+    return;
+  }
+
   var N = window.NEGOCIO || {};
   var ESTUDIOS = (window.ESTUDIOS || []).filter(function (e) { return e && e.nombre; });
   var CLAVE_LISTA = "staMargarita.lista";
@@ -16,7 +24,8 @@
   };
 
   // Identificador único y texto de búsqueda por estudio.
-  var porId = {};
+  // Sin prototipo, para que claves como "constructor" o "__proto__" no cuenten como estudios.
+  var porId = Object.create(null);
   ESTUDIOS.forEach(function (e, i) {
     var id = String(e.id || e.clave || "").trim();
     if (!id || porId[id]) id = "e" + i;
