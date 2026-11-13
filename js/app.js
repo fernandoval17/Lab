@@ -128,9 +128,10 @@
 
     // Sucursal (final de la página): cómo llegar y redes
     var acciones = "";
-    if (N.mapaUrl) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + esc(N.mapaUrl) + '">Cómo llegar</a>';
-    var redes = [["facebook", "Facebook"], ["instagram", "Instagram"]].filter(function (r) { return N[r[0]]; }).map(function (r) {
-      return '<a target="_blank" rel="noopener" href="' + esc(N[r[0]]) + '">' + r[1] + "</a>";
+    var mapa = urlSegura(N.mapaUrl);
+    if (mapa) acciones += '<a class="boton boton-claro" target="_blank" rel="noopener" href="' + esc(mapa) + '">Cómo llegar</a>';
+    var redes = [["facebook", "Facebook"], ["instagram", "Instagram"]].filter(function (r) { return urlSegura(N[r[0]]); }).map(function (r) {
+      return '<a target="_blank" rel="noopener" href="' + esc(urlSegura(N[r[0]])) + '">' + r[1] + "</a>";
     });
     if (redes.length) acciones += '<p class="redes">Síguenos: ' + redes.join(" · ") + "</p>";
     $("#accionesContacto").innerHTML = acciones;
@@ -167,6 +168,13 @@
     var ahora = Number(p.hour) * 60 + Number(p.minute);
     var minutos = function (s) { var a = String(s).split(":"); return Number(a[0]) * 60 + Number(a[1] || 0); };
     return hs.some(function (h) { return h.diasSemana.indexOf(dia) !== -1 && ahora >= minutos(h.abre) && ahora < minutos(h.cierra); });
+  }
+
+  // Solo se aceptan enlaces https desde datos/negocio.js; cualquier otro (por ejemplo,
+  // "javascript:") se descarta para que un error al editar no ejecute código.
+  function urlSegura(u) {
+    try { var x = new URL(String(u)); return x.protocol === "https:" ? x.href : ""; }
+    catch (err) { return ""; }
   }
 
   function enlaceWhatsApp(texto) {
@@ -574,9 +582,13 @@
 
   // Enlace del código QR: #lista=BH,GLU abre la página con esa lista. Va después
   // de "#" para que los estudios del paciente nunca se envíen al servidor.
-  var recibida = location.hash.indexOf("#lista=") === 0 ? decodeURIComponent(location.hash.slice(7)) : "";
+  // Un enlace dañado o manipulado (por ejemplo, "%E0%A4%A") no debe romper la página.
+  var conLista = location.hash.indexOf("#lista=") === 0, recibida = "";
+  if (conLista) {
+    try { recibida = decodeURIComponent(location.hash.slice(7)); } catch (err) { recibida = ""; }
+  }
   window.addEventListener("hashchange", function () { if (location.hash.indexOf("#lista=") === 0) location.reload(); });
-  if (recibida) {
+  if (conLista) {
     var ids = recibida.split(",").filter(function (id, i, a) { return porId[id] && a.indexOf(id) === i; });
     if (ids.length) {
       estado.lista = ids;
